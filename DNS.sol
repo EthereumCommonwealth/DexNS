@@ -3,6 +3,8 @@ pragma solidity ^0.4.10;
  /**
  * Dexaran Naming Service
  * simple analogue of ENS or ECNS
+ * WARNING! This is the very unfinished version! 
+ * Just a template.
  */
  
  contract DNS {
@@ -13,15 +15,29 @@ pragma solidity ^0.4.10;
      function addressOf(string) constant returns (address);
      function valueOf(string) constant returns (string);
      function endblockOf(string) constant returns (uint);
-     
-     function ownerByHash(bytes32) constant returns (address);
-     function addressByHash(bytes32) constant returns (address);
-     function valueByHash(bytes32) constant returns (string);
-     function endblockByHash(bytes32) constant returns (uint);
  }
+ 
+ 
+/** contract Test {
+ * 
+ *   address disposableObject;
+ *   address constant_name_service;
+ *   function() payable {
+ *         //disposableObject.call.value(25000)(msg.data);
+ *         
+ *        DNS a = DNS(constant_name_service);
+ *        a.addressOf("ETC dev team").send(msg.value);
+ *    }
+ *}
+ */
  
  contract DexaranNamingService {
      
+    event NamePriceChanged(uint indexed _price);
+    event OwningTimeChanged(uint indexed _blocks);
+    event DebugDisabled();
+    
+    
     
     modifier onlyOwner {
         if (msg.sender!=owner)
@@ -45,12 +61,19 @@ pragma solidity ^0.4.10;
         address addr;
         string value;
         uint endblock;
+        bool hideOwner;
+        bytes32 signature;
     }
     
     mapping (bytes32 => Resolution) resolution;
     
     function DexaranNamingService() {
         owner=msg.sender;
+        bytes32 sig = bytes32(sha256("DNS comission"));
+        resolution[sig].owner = msg.sender;
+        resolution[sig].addr = msg.sender;
+        resolution[sig].endblock = block.number + 1500000;
+        resolution[sig].signature = sig;
     }
     
     
@@ -61,15 +84,18 @@ pragma solidity ^0.4.10;
     
     function registerName(string _name) payable returns (bool ok) {
         if(!(msg.value < namePrice)) {
+            bytes32 sig = bytes32(sha256(_name));
             if((resolution[sig].owner == 0x0) || (resolution[sig].endblock < block.number))
             {
-                bytes32 sig = bytes32(sha256(_name));
                 resolution[sig].owner = msg.sender;
-                resolution[sig].value = _name;
+                resolution[sig].addr = msg.sender;
+                resolution[sig].value = "registered";
+                resolution[sig].hideOwner = false;
                 resolution[sig].endblock = block.number + owningTime;
-            }
-            if (owner.send(msg.value)) {
-                return true;
+                resolution[sig].signature = sig;
+                if (resolution[bytes32(sha256("DNS comission"))].addr.send(msg.value)) {
+                    return true;
+                }
             }
         }
         throw;
@@ -77,51 +103,52 @@ pragma solidity ^0.4.10;
     
     function getName(string _name) constant returns (address _owner, address _associatedAddress, string _value, uint _endblock) {
         bytes32 sig = bytes32(sha256(_name));
-        return (resolution[sig].owner, resolution[sig].addr, resolution[sig].value, resolution[sig].endblock);
+        if(resolution[sig].hideOwner) {
+            return (0x0, resolution[sig].addr, resolution[sig].value, resolution[sig].endblock);
+        }
+        else {
+            return (resolution[sig].owner, resolution[sig].addr, resolution[sig].value, resolution[sig].endblock);
+        }
     }
-    
     
     function valueOf(string _name) constant returns (string _value) {
         bytes32 sig = bytes32(sha256(_name));
         return resolution[sig].value;
     }
-    function valueOfByHash(bytes32 _name) constant returns (string _value) {
-        return resolution[_name].value;
-    }
-    
     
     function addressOf(string _name) constant returns (address _addr) {
         bytes32 sig = bytes32(sha256(_name));
         return resolution[sig].addr;
     }
-    function addressOfByHash(bytes32 _name) constant returns (address _addr) {
-        return resolution[_name].addr;
-    }
-    
-    
 
     function ownerOf(string _name) constant returns (address _owner) {
         bytes32 sig = bytes32(sha256(_name));
+        if(resolution[sig].hideOwner) {
+            throw;
+        }
         return resolution[sig].owner;
-    }    function ownerOfByHash(bytes32 _name) constant returns (address _owner) {
-        return resolution[_name].owner;
     }
-    
     
     function endblockOf(string _name) constant returns (uint _endblock) {
         bytes32 sig = bytes32(sha256(_name));
         return resolution[sig].endblock;
     }
-    function endblockByHash(bytes32 _name) constant returns (uint _endblock) {
-        return resolution[_name].endblock;
-    }
-    
     
     
     function updateName(string _name, address _addr, string _value) {
         bytes32 sig = bytes32(sha256(_name));
         if(msg.sender == resolution[sig].owner) {
             resolution[sig].addr = _addr;
+            resolution[sig].value = _value;
+        }
+        else {
+            throw;
+        }
+    }
+    
+    function updateName(string _name, string _value) {
+        bytes32 sig = bytes32(sha256(_name));
+        if(msg.sender == resolution[sig].owner) {
             resolution[sig].value = _value;
         }
         else {
@@ -138,10 +165,20 @@ pragma solidity ^0.4.10;
             throw;
         }
     }
-    function updateBindingTime(string _name) payable {
+    
+    function hideNameOwner(string _name, bool _hide) {
+        bytes32 sig = bytes32(sha256(_name));
+        if(msg.sender == resolution[sig].owner) {
+            resolution[sig].hideOwner = _hide;
+        }
+        else {
+            throw;
+        }
+    }
+    function extendNameBindingTime(string _name) payable {
         bytes32 sig = bytes32(sha256(_name));
         if((msg.sender == resolution[sig].owner) && (msg.value >= namePrice)) {
-            if(owner.send(msg.value)) {
+            if(resolution[bytes32(sha256("DNS comission"))].addr.send(msg.value)) {
                 resolution[sig].endblock = block.number + owningTime;
             }
         }
@@ -156,19 +193,22 @@ pragma solidity ^0.4.10;
         owner=_newOwner;
     }
     
-    function disableDebug(address _newOwner) onlyOwner onlyDebug {
+    function disableDebug_ONLYDEBUG(address _newOwner) onlyOwner onlyDebug {
         debug=false;
+        DebugDisabled();
     }
     
-    function changeOwningTime(uint _newOwningTime) onlyOwner onlyDebug {
+    function setOwningTime_ONLYDEBUG(uint _newOwningTime) onlyOwner onlyDebug {
         owningTime = _newOwningTime;
+        OwningTimeChanged(_newOwningTime);
     }
     
-    function changeNamePrice(uint _newNamePrice) onlyOwner onlyDebug {
+    function changeNamePrice_ONLYDEBUG(uint _newNamePrice) onlyOwner onlyDebug {
         namePrice = _newNamePrice;
+        NamePriceChanged(_newNamePrice);
     }
     
-    function dispose() onlyOwner onlyDebug {
+    function dispose_ONLYDEBUG() onlyOwner onlyDebug {
         selfdestruct(owner);
     }
     
