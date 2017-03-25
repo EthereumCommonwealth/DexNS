@@ -9,7 +9,7 @@ ETC mainnet version: 0x0e2cec66618f7ca428b1fe01d0de779dbb0f7358
 
 You can access this contract by following this small guide:
 1. Navigate to https://www.myetherwallet.com/#contracts
-2. Insert contract address: 0x0e2cec66618f7ca428b1fe01d0de779dbb0f7358
+2. Insert contract address: [0x0e2cec66618f7ca428b1fe01d0de779dbb0f7358](https://gastracker.io/addr/0x0e2cec66618f7ca428b1fe01d0de779dbb0f7358)
 3. Open [`simple_ABI.json`](https://github.com/Dexaran/DNS/blob/master/HOWTO/simple_ABI.json) and copy everything from it to `ABI / JsonInterface` on MyEtherWallet.
 4. Click `Access`. Functions list will appear under `Read / Write contract` label. `simple_ABI` will only show you functions that are executable for a regular user. If you want to watch debugging functions or inner contract variables you can use `full_ABI` instead.
 
