@@ -32,10 +32,18 @@ Addresses or stringified data can be accessed from the external contract.
 Naming Service content can't be blocked, removed or censored in any other way. Everyone is allowed to do whatever he/she wants with it, for example connect Names with addresses or store data in the immutable storage.
 
 # Details 
+- `Name` is a key-phrase that will be associated with name data. Each `Name` contains:
+    - `owner` the owner of Name.
+    - `addr` associated address.
+    - `value` stringified associated data.
+    - `endblock` the number of block on which ownership of this Name expires.
+    - `signature` sha256 hash of this Name key-phrase.
+
 - `registerName` function allows you to register a new key-phrase Name and become its owner.
 - `updateName` function allows you to update Name content if you are Name owner.
 - `changeNameOwner` function allows owner to transfer ownership to another address.
 - `hideNameOwner` function allows to hide Name owner. If Name owner is hidden `getName(Name)` will return owner as 0x0 and `ownerOf(Name)` will throw an error.
+- `extendNameBindingTime` function allows you to pay Name again and extend owning period by next `owningTime` blocks.
 - `ownerOf` function allows to check who is Name owner. (for example it may be needed to check ownership in contract trading Names)
 - `addressOf` will return address associated with Name.
 - `valueOf` will return stringified data associated with Name.
@@ -44,3 +52,5 @@ Naming Service content can't be blocked, removed or censored in any other way. E
 - `owningTime ` is a number of blocks you will own registered Name. (=1 500 000 now)
 - `namePrice ` is amount of Ether that you need to pay to buy Name. (=0 now)
 - `debug ` returns is a contract in debugging mode or not.
+
+You can register Name and became its owner. You will own it until specified block with `endblock` number. If no one will calim your name you will continue to be its owner but if Name will be re-registered it will be updated with a new owner and new Name data. 
