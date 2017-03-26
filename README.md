@@ -55,6 +55,6 @@ You can register Name and became its owner. You will own it until specified bloc
 - `valueOf` will return stringified data associated with Name.
 - `endblockOf` will return the block number on which ownership on given Name expires.
 
-- `owningTime ` is a number of blocks you will own registered Name. (=1 500 000 now)
-- `namePrice ` is amount of Ether that you need to pay to buy Name. (=0 now)
-- `debug ` returns is a contract in debugging mode or not.
+- `uint owningTime ` is a number of blocks you will own registered Name. (=1 500 000 now)
+- `uint namePrice ` is amount of Ether that you need to pay to buy Name. (=0 now)
+- `bool debug ` returns is a contract in debugging mode or not.
