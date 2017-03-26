@@ -3,8 +3,7 @@ pragma solidity ^0.4.10;
  /**
  * Dexaran Naming Service
  * simple analogue of ENS or ECNS
- * WARNING! This is the very unfinished version! 
- * Just a template.
+ * WARNING! This is the very unfinished version!
  */
  
  contract DNS {
@@ -37,8 +36,6 @@ pragma solidity ^0.4.10;
     event OwningTimeChanged(uint indexed _blocks);
     event DebugDisabled();
     
-    
-    
     modifier onlyOwner {
         if (msg.sender!=owner)
             throw;
@@ -50,11 +47,10 @@ pragma solidity ^0.4.10;
             throw;
         _;
     }
-    
-    address public owner;
-    bool public debug = true;
-    uint public owningTime = 1500000;
-    uint public namePrice = 1000000000000000000;
+    address owner;
+    bool debug = true;
+    uint owningTime = 1500000;
+    uint namePrice = 1000000000000000000;
     
     struct Resolution {
         address  owner;
@@ -101,13 +97,13 @@ pragma solidity ^0.4.10;
         throw;
     }
     
-    function getName(string _name) constant returns (address _owner, address _associatedAddress, string _value, uint _endblock) {
+    function getName(string _name) constant returns (address _owner, address _associatedAddress, string _value, uint _endblock, bytes32 _signature) {
         bytes32 sig = bytes32(sha256(_name));
         if(resolution[sig].hideOwner) {
-            return (0x0, resolution[sig].addr, resolution[sig].value, resolution[sig].endblock);
+            return (0x0, resolution[sig].addr, resolution[sig].value, resolution[sig].endblock, resolution[sig].signature);
         }
         else {
-            return (resolution[sig].owner, resolution[sig].addr, resolution[sig].value, resolution[sig].endblock);
+            return (resolution[sig].owner, resolution[sig].addr, resolution[sig].value, resolution[sig].endblock, resolution[sig].signature);
         }
     }
     
@@ -150,6 +146,16 @@ pragma solidity ^0.4.10;
         bytes32 sig = bytes32(sha256(_name));
         if(msg.sender == resolution[sig].owner) {
             resolution[sig].value = _value;
+        }
+        else {
+            throw;
+        }
+    }
+    
+    function updateName(string _name, address _address) {
+        bytes32 sig = bytes32(sha256(_name));
+        if(msg.sender == resolution[sig].owner) {
+            resolution[sig].addr = _address;
         }
         else {
             throw;
