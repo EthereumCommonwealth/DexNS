@@ -38,6 +38,10 @@ Naming Service content can't be blocked, removed or censored in any other way. E
     - `value` stringified associated data.
     - `endblock` the number of block on which ownership of this Name expires.
     - `signature` sha256 hash of this Name key-phrase.
+    
+
+You can register Name and became its owner. You will own it until specified block with `endblock` number. If no one will claim your name you will continue to be its owner but if Name will be re-registered it will be updated with a new owner and new Name data. 
+
 
 - `registerName` function allows you to register a new key-phrase Name and become its owner.
 - `updateName` function allows you to update Name content if you are Name owner.
@@ -52,5 +56,3 @@ Naming Service content can't be blocked, removed or censored in any other way. E
 - `owningTime ` is a number of blocks you will own registered Name. (=1 500 000 now)
 - `namePrice ` is amount of Ether that you need to pay to buy Name. (=0 now)
 - `debug ` returns is a contract in debugging mode or not.
-
-You can register Name and became its owner. You will own it until specified block with `endblock` number. If no one will calim your name you will continue to be its owner but if Name will be re-registered it will be updated with a new owner and new Name data. 
