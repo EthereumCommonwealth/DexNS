@@ -42,7 +42,7 @@ Naming Service content can't be blocked, removed or censored in any other way. E
     - `signature` sha256 hash of this Name key-phrase.
     
 
-You can register Name and became its owner. You will own it until specified block with `endblock` number. If no one will claim your name you will continue to be its owner but if Name will be re-registered it will be updated with a new owner and new Name data. 
+You can register Name and became its owner. You will own it until specified block with `endblock` number. If no one will claim your Name after `endblock` you will continue to be its owner but if Name will be re-registered it will be updated with a new owner and new Name data. 
 
 
 - `registerName` function allows you to register a new key-phrase Name and become its owner.
