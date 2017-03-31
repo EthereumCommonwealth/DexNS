@@ -6,7 +6,7 @@ ETC mainnet version: [0x0e2cec66618f7ca428b1fe01d0de779dbb0f7358](https://gastra
 
 
 ## How to try it
-Web interface is launched and already available: https://dexaran.github.io/nameservice/
+Web interface is launched and already available: https://dexaran.github.io/nameservice/#help
 
 
 You can access this contract directly by following this small guide:
