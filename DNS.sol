@@ -49,14 +49,14 @@ pragma solidity ^0.4.10;
     }
     address owner;
     bool debug = true;
-    uint owningTime = 1500000;
+    uint owningTime = 31536000; //1 year in seconds
     uint namePrice = 1000000000000000000;
     
     struct Resolution {
         address  owner;
         address addr;
         string value;
-        uint endblock;
+        uint expires;
         bool hideOwner;
         bytes32 signature;
     }
@@ -68,7 +68,7 @@ pragma solidity ^0.4.10;
         bytes32 sig = bytes32(sha256("DNS comission"));
         resolution[sig].owner = msg.sender;
         resolution[sig].addr = msg.sender;
-        resolution[sig].endblock = block.number + 1500000;
+        resolution[sig].expires = now + 63036000;
         resolution[sig].signature = sig;
     }
     
@@ -81,13 +81,13 @@ pragma solidity ^0.4.10;
     function registerName(string _name) payable returns (bool ok) {
         if(!(msg.value < namePrice)) {
             bytes32 sig = bytes32(sha256(_name));
-            if((resolution[sig].owner == 0x0) || (resolution[sig].endblock < block.number))
+            if((resolution[sig].owner == 0x0) || (resolution[sig].expires < now))
             {
                 resolution[sig].owner = msg.sender;
                 resolution[sig].addr = msg.sender;
                 resolution[sig].value = "registered";
                 resolution[sig].hideOwner = false;
-                resolution[sig].endblock = block.number + owningTime;
+                resolution[sig].expires = now + owningTime;
                 resolution[sig].signature = sig;
                 if (resolution[bytes32(sha256("DNS comission"))].addr.send(msg.value)) {
                     return true;
@@ -97,13 +97,13 @@ pragma solidity ^0.4.10;
         throw;
     }
     
-    function getName(string _name) constant returns (address _owner, address _associatedAddress, string _value, uint _endblock, bytes32 _signature) {
+    function getName(string _name) constant returns (address _owner, address _associatedAddress, string _value, uint _expires, bytes32 _signature) {
         bytes32 sig = bytes32(sha256(_name));
         if(resolution[sig].hideOwner) {
-            return (0x0, resolution[sig].addr, resolution[sig].value, resolution[sig].endblock, resolution[sig].signature);
+            return (0x0, resolution[sig].addr, resolution[sig].value, resolution[sig].expires, resolution[sig].signature);
         }
         else {
-            return (resolution[sig].owner, resolution[sig].addr, resolution[sig].value, resolution[sig].endblock, resolution[sig].signature);
+            return (resolution[sig].owner, resolution[sig].addr, resolution[sig].value, resolution[sig].expires, resolution[sig].signature);
         }
     }
     
@@ -125,9 +125,9 @@ pragma solidity ^0.4.10;
         return resolution[sig].owner;
     }
     
-    function endblockOf(string _name) constant returns (uint _endblock) {
+    function endblockOf(string _name) constant returns (uint _expires) {
         bytes32 sig = bytes32(sha256(_name));
-        return resolution[sig].endblock;
+        return resolution[sig].expires;
     }
     
     
@@ -162,6 +162,70 @@ pragma solidity ^0.4.10;
         }
     }
     
+    struct slice {
+        uint _len;
+        uint _ptr;
+    }
+    
+    function toSlice(string self) private returns (slice) {
+        uint ptr;
+        assembly {
+            ptr := add(self, 0x20)
+        }
+        return slice(bytes(self).length, ptr);
+    }
+    
+    function memcpy(uint dest, uint src, uint len) private {
+        // Copy word-length chunks while possible
+        for(; len >= 32; len -= 32) {
+            assembly {
+                mstore(dest, mload(src))
+            }
+            dest += 32;
+            src += 32;
+        }
+
+        // Copy remaining bytes
+        uint mask = 256 ** (32 - len) - 1;
+        assembly {
+            let srcpart := and(mload(src), not(mask))
+            let destpart := and(mload(dest), mask)
+            mstore(dest, or(destpart, srcpart))
+        }
+    }
+    
+    function concat(slice self, slice other) private returns (string) {
+        var ret = new string(self._len + other._len);
+        uint retptr;
+        assembly { retptr := add(ret, 32) }
+        memcpy(retptr, self._ptr, self._len);
+        memcpy(retptr + self._len, other._ptr, other._len);
+        return ret;
+    }
+    
+    function toString(slice self) internal returns (string) {
+        var ret = new string(self._len);
+        uint retptr;
+        assembly { retptr := add(ret, 32) }
+
+        memcpy(retptr, self._ptr, self._len);
+        return ret;
+    }
+    
+    function StringAppend(string _str1, string _str2) private constant returns (string) {
+        return concat(toSlice(_str1), toSlice(_str2));
+    }
+    
+    function appendNameValue(string _name, string _value) {
+        bytes32 sig = bytes32(sha256(_name));
+        if(msg.sender == resolution[sig].owner) {
+            resolution[sig].value = StringAppend(resolution[sig].value, _value);
+        }
+        else {
+            throw;
+        }
+    }
+    
     function changeNameOwner(string _name, address _newOwner) {
         bytes32 sig = bytes32(sha256(_name));
         if(msg.sender == resolution[sig].owner) {
@@ -185,7 +249,7 @@ pragma solidity ^0.4.10;
         bytes32 sig = bytes32(sha256(_name));
         if((msg.sender == resolution[sig].owner) && (msg.value >= namePrice)) {
             if(resolution[bytes32(sha256("DNS comission"))].addr.send(msg.value)) {
-                resolution[sig].endblock = block.number + owningTime;
+                resolution[sig].expires = now + owningTime;
             }
         }
         else {
