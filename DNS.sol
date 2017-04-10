@@ -8,12 +8,19 @@ pragma solidity ^0.4.10;
  
  contract DNS {
      function name(string) constant returns (bytes32);
-     function getName(string) constant returns (address _owner, address _associated, string _value, uint _end);
+     function getName(string) constant returns (address _owner, address _associated, string _value, uint _end, bytes32 _sig);
      
      function ownerOf(string) constant returns (address);
      function addressOf(string) constant returns (address);
      function valueOf(string) constant returns (string);
-     function endblockOf(string) constant returns (uint);
+     function endtimeOf(string) constant returns (uint);
+     function updateName(string, string);
+     function updateName(string, address);
+     function updateName(string, address, string);
+     function registerName(string) payable returns (bool);
+     function changeNameOwner(string, address);
+     function hideNameOwner(string);
+     function extendNameBindingTime(string) payable;
  }
  
  
@@ -30,7 +37,7 @@ pragma solidity ^0.4.10;
  *}
  */
  
- contract DexaranNamingService {
+ contract DexaranNamingService{
      
     event NamePriceChanged(uint indexed _price);
     event OwningTimeChanged(uint indexed _blocks);
@@ -125,7 +132,7 @@ pragma solidity ^0.4.10;
         return resolution[sig].owner;
     }
     
-    function endblockOf(string _name) constant returns (uint _expires) {
+    function endtimeOf(string _name) constant returns (uint _expires) {
         bytes32 sig = bytes32(sha256(_name));
         return resolution[sig].expires;
     }
