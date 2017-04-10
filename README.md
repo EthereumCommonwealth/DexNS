@@ -1,8 +1,8 @@
 # Dexaran Naming Service
-Naming Service is a part of [Dexaran Treasury System](https://github.com/Dexaran/Treasury).
+Naming Service is a part of [Dexaran Bursary System](https://github.com/Dexaran/Treasury).
 
-This is very early version. Many updates are coming.
-ETC mainnet version: [0x0e2cec66618f7ca428b1fe01d0de779dbb0f7358](https://gastracker.io/addr/0x0e2cec66618f7ca428b1fe01d0de779dbb0f7358)
+This is the second version. Many updates are coming.
+ETC mainnet version: [0x2906797a0a56a0c60525245c01788ecd34063b80](https://gastracker.io/addr/0x2906797a0a56a0c60525245c01788ecd34063b80)
 
 
 ## How to try it
@@ -10,13 +10,11 @@ Web interface is launched and already available: https://dexaran.github.io/names
 
 
 You can access this contract directly by following this small guide:
-1. Navigate to https://www.myetherwallet.com/#contracts
-2. Insert contract address: [0x0e2cec66618f7ca428b1fe01d0de779dbb0f7358](https://gastracker.io/addr/0x0e2cec66618f7ca428b1fe01d0de779dbb0f7358)
-3. Open [`simple_ABI.json`](https://github.com/Dexaran/DNS/blob/master/HOWTO/simple_ABI.json) and copy everything from it to `ABI / JsonInterface` on MyEtherWallet.
-4. Click `Access`. Functions list will appear under `Read / Write contract` label. `simple_ABI` will only show you functions that are executable for a regular user. If you want to watch debugging functions or inner contract variables you can use `full_ABI` instead.
-
-5. Select a function you want to watch. The main two are `registerName` and `getName`. You can choose `getName` and an empty function output template will appear. You can input any text intor `_name` field and click `READ` button. It will execute function and show its output. If the name you entered is already registered the `getName` function will show you [ditails like this](https://github.com/Dexaran/DNS/blob/master/HOWTO/HOWTO5.png). Otherwise it will return 0x0 addresses and empty string. The `READ` executions are free.
-6. If you want to register `_name` you need to choose `registerName` function and input a text you want to be owned by your address. Then choose a decription method and decrypt your wallet. After wallet is decrypted `WRITE` button will appear. `WRITE` is not free. If you want to register name you should click `WRITE` and transaction generation window will appear. You need to set Gas Limit to 200 000. MyEtherWallet is inputing a wrong value so if you will not update it manually transaction will fail. Then click `Generate transaction` and `Yes, im sure!` to send transaction. Wait for transaction to submit and enjoy result.
+1. Navigate to [DexNS web UI](https://dexaran.github.io/nameservice/#interact-contract)
+2. TYpe `DexNS` intor Contract Name textbox. Functions list will appear under `Read / Write contract` label.
+3. You can type `DexNS extended` intor Contract Name textbox to watch debug functions. This functions are only available for contract owner.
+4. Select a function you want to watch. The main two are `registerName` and `getName`. You can choose `getName` and an empty function output template will appear. You can input any text intor `_name` field and click `READ` button. It will execute function and show its output. If the name you entered is already registered the `getName` function will show you [ditails like this](https://github.com/Dexaran/DNS/blob/master/HOWTO/HOWTO5.png). Otherwise it will return 0x0 addresses and empty string. `READ` executions are free.
+5. If you want to register `_name` you must go to "Access account" tab and unlock a wallet. Go back to "Contract tab" and choose `registerName` function then input a text you want to be owned by your address. `WRITE` is not free. If you want to register name you should click `WRITE` and transaction info will appear. You need to set Gas Limit to 200 000. Then click `SEND TRANSACTION` and wait for transaction to submit. Enjoy result.
 
 
 ## Description
@@ -51,11 +49,13 @@ You can register Name and became its owner. You will own it until specified bloc
 - `updateName` function allows you to update Name content if you are Name owner.
 - `changeNameOwner` function allows owner to transfer ownership to another address.
 - `hideNameOwner` function allows to hide Name owner. If Name owner is hidden `getName(Name)` will return owner as 0x0 and `ownerOf(Name)` will throw an error.
+- `associate` function allows you to assign owned Name to your address. It may be needed to replace hex-address shown on blockchain explorers by your Name.
 - `extendNameBindingTime` function allows you to pay Name again and extend owning period by next `owningTime` blocks.
 - `ownerOf` function allows to check who is Name owner. (for example it may be needed to check ownership in contract trading Names)
 - `addressOf` will return address associated with Name.
 - `valueOf` will return stringified data associated with Name.
-- `endblockOf` will return the block number on which ownership on given Name expires.
+- `endtomeOf` will return the block number on which ownership on given Name expires.
+- `getAssociation` will return an assigned address if Name is inputed or assigned Name when address is inputed.
 
 - `uint owningTime ` is a number of blocks you will own registered Name. (=1 500 000 now)
 - `uint namePrice ` is amount of Ether that you need to pay to buy Name. (=0 now)
