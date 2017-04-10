@@ -21,6 +21,7 @@ pragma solidity ^0.4.10;
      function changeNameOwner(string, address);
      function hideNameOwner(string);
      function extendNameBindingTime(string) payable;
+     function nameValueAppend(string, string);
  }
  
  
