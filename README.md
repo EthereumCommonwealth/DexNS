@@ -11,9 +11,9 @@ Web interface is launched and already available: https://dexaran.github.io/names
 
 You can access this contract directly by following this small guide:
 1. Navigate to [DexNS web UI](https://dexaran.github.io/nameservice/#interact-contract)
-2. TYpe `DexNS` intor Contract Name textbox. Functions list will appear under `Read / Write contract` label.
-3. You can type `DexNS extended` intor Contract Name textbox to watch debug functions. This functions are only available for contract owner.
-4. Select a function you want to watch. The main two are `registerName` and `getName`. You can choose `getName` and an empty function output template will appear. You can input any text intor `_name` field and click `READ` button. It will execute function and show its output. If the name you entered is already registered the `getName` function will show you [ditails like this](https://github.com/Dexaran/DNS/blob/master/HOWTO/HOWTO5.png). Otherwise it will return 0x0 addresses and empty string. `READ` executions are free.
+2. TYpe `DexNS` into Contract Name textbox. Functions list will appear under `Read / Write contract` label.
+3. You can type `DexNS extended` into Contract Name textbox to watch debug functions. This functions are only available for contract owner.
+4. Select a function you want to watch. The main two are `registerName` and `getName`. You can choose `getName` and an empty function output template will appear. You can input any text into `_name` field and click `READ` button. It will execute function and show its output. If the name you entered is already registered the `getName` function will show you [ditails like this](https://github.com/Dexaran/DNS/blob/master/HOWTO/HOWTO5.png). Otherwise it will return 0x0 addresses and empty string. `READ` executions are free.
 5. If you want to register `_name` you must go to "Access account" tab and unlock a wallet. Go back to "Contract tab" and choose `registerName` function then input a text you want to be owned by your address. `WRITE` is not free. If you want to register name you should click `WRITE` and transaction info will appear. You need to set Gas Limit to 200 000. Then click `SEND TRANSACTION` and wait for transaction to submit. Enjoy result.
 
 
