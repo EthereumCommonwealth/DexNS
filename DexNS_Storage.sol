@@ -35,6 +35,7 @@ contract DexNS_Storage {
     }
     
     mapping (bytes32 => Resolution) public resolution;
+    mapping (address => string) public assignation;
     
     function DexNS_Storage()
     {
@@ -244,6 +245,22 @@ contract DexNS_Storage {
         }
     }
     
+    function Assign(string _name)
+    {
+        if(resolution[sha256(_name)].owner == msg.sender)
+        {
+            assignation[msg.sender] = _name;
+        }
+        else
+        {
+            throw;
+        }
+    }
+    
+    function assignation(address _assignee) constant returns (string _name)
+    {
+        return assignation[_assignee];
+    }
     
     // DEBUG
     
