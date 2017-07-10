@@ -1,0 +1,234 @@
+pragma solidity ^0.4.11;
+
+import './DexNS_Storage.sol';
+
+ /**
+ * Dexaran Naming Service
+ * simple analogue of ENS or ECNS
+ * WARNING! This is the very unfinished version!
+ */
+ 
+ contract DexNS_Interface {
+     function name(string) constant returns (bytes32);
+     function getName(string) constant returns (address _owner, address _associated, string _value, uint _end, bytes32 _sig);
+     
+     function ownerOf(string) constant returns (address);
+     function addressOf(string) constant returns (address);
+     function valueOf(string) constant returns (string);
+     function endtimeOf(string) constant returns (uint);
+     function updateName(string, string);
+     function updateName(string, address);
+     function updateName(string, address, string);
+     function registerName(string) payable returns (bool);
+     function changeNameOwner(string, address);
+     function hideNameOwner(string);
+     function extendNameBindingTime(string) payable;
+     function appendNameMetadata(string, string);
+ }
+ 
+ 
+/** contract Test
+ *  {
+ *   address constant_name_service;
+ *   function() payable
+ *   {
+ *        DNS a = DNS(constant_name_service);
+ *        a.addressOf("DEX ICO").send(msg.value);
+ *   }
+ *}
+ */
+ 
+ contract DexNS
+ {
+    event Error(bytes32);
+    event NamePriceChanged(uint indexed _price);
+    event OwningTimeChanged(uint indexed _blocks);
+    event DebugDisabled();
+    
+    DexNS_Storage db;
+    
+    modifier only_owner
+    {
+        if (msg.sender!=owner)
+            throw;
+        _;
+    }
+    
+    modifier only_debug
+    {
+        if (!debug)
+            throw;
+        _;
+    }
+    
+    address public owner;
+    bool public debug = true;
+    uint public owningTime = 31536000; //1 year in seconds
+    uint public namePrice = 1000000000000000000;
+    
+    mapping (bytes32 => uint256) public expirations;
+    
+    function DexNS() {
+        owner=msg.sender;
+        db = DexNS_Storage(0x488c9e2df11ac9d19eb07df362cb174ffd4724d8);
+    }
+    
+    
+    
+    function name(string _name) constant returns (bytes32 hash) {
+        return bytes32(sha256(_name));
+    }
+    
+    function registerName(string _name) payable returns (bool ok) {
+        if(!(msg.value < namePrice)) {
+            bytes32 _sig = sha256(_name);
+            if(expirations[_sig] < now)
+            {
+                db.registerName(_name);
+                if (db.addressOf("DexNS comission").send(msg.value)) {
+                    return true;
+                }
+            }
+        }
+        throw;
+    }
+    
+    function addressOf(string _name) constant returns (address _addr) {
+        return db.addressOf(_name);
+    }
+
+    function ownerOf(string _name) constant returns (address _owner) {
+        return db.ownerOf(_name);
+    }
+    
+    function endtimeOf(string _name) constant returns (uint _expires) {
+        return expirations[sha256(_name)];
+    }
+    
+    
+    function updateName(string _name, address _addr, string _value) {
+        db.updateName(_name, _addr, _value);
+    }
+    
+    function updateName(string _name, string _value) {
+        db.updateName(_name, _value);
+    }
+    
+    function updateName(string _name, address _addr) {
+        db.updateName(_name, _addr);
+    }
+    
+    struct slice {
+        uint _len;
+        uint _ptr;
+    }
+    
+    function toSlice(string self) private returns (slice) {
+        uint ptr;
+        assembly {
+            ptr := add(self, 0x20)
+        }
+        return slice(bytes(self).length, ptr);
+    }
+    
+    function memcpy(uint dest, uint src, uint len) private {
+        // Copy word-length chunks while possible
+        for(; len >= 32; len -= 32) {
+            assembly {
+                mstore(dest, mload(src))
+            }
+            dest += 32;
+            src += 32;
+        }
+
+        // Copy remaining bytes
+        uint mask = 256 ** (32 - len) - 1;
+        assembly {
+            let srcpart := and(mload(src), not(mask))
+            let destpart := and(mload(dest), mask)
+            mstore(dest, or(destpart, srcpart))
+        }
+    }
+    
+    function concat(slice self, slice other) private returns (string) {
+        var ret = new string(self._len + other._len);
+        uint retptr;
+        assembly { retptr := add(ret, 32) }
+        memcpy(retptr, self._ptr, self._len);
+        memcpy(retptr + self._len, other._ptr, other._len);
+        return ret;
+    }
+    
+    function toString(slice self) internal returns (string)
+    {
+        var ret = new string(self._len);
+        uint retptr;
+        assembly { retptr := add(ret, 32) }
+
+        memcpy(retptr, self._ptr, self._len);
+        return ret;
+    }
+    
+    function StringAppend(string _str1, string _str2) private constant returns (string)
+    {
+        return concat(toSlice(_str1), toSlice(_str2));
+    }
+    
+    function appendNameMetadata(string _name, string _value)
+    {
+        db.appendNameMetadata(_name, _value);
+    }
+    
+    function changeNameOwner(string _name, address _newOwner)
+    {
+        db.changeNameOwner(_name, _newOwner);
+    }
+    
+    function hideNameOwner(string _name, bool _hide)
+    {
+        db.hideNameOwner(_name, _hide);
+    }
+    
+    function extendNameBindingTime(string _name) payable
+    {
+        if(msg.value > namePrice)
+        {
+           if(db.addressOf("DexNS comission").send(msg.value))
+           {
+               expirations[sha256(_name)] += owningTime;
+           }
+        }
+    }
+    
+    
+    
+    function change_Owner(address _newOwner) only_owner {
+        owner=_newOwner;
+    }
+    
+    function disable_Debug() only_owner only_debug {
+        debug=false;
+        DebugDisabled();
+    }
+    
+    function set_Owning_Time(uint _newOwningTime) only_owner only_debug {
+        owningTime = _newOwningTime;
+        OwningTimeChanged(_newOwningTime);
+    }
+    
+    function change_Name_Price(uint _newNamePrice) only_owner only_debug {
+        namePrice = _newNamePrice;
+        NamePriceChanged(_newNamePrice);
+    }
+    
+    function dispose() only_owner only_debug {
+        selfdestruct(owner);
+    }
+    
+    function delegateCall(address _target, uint _gas, bytes _data) payable only_owner {
+        if(!_target.call.value(_gas)(_data))
+        {
+            Error(0);
+        }
+    }
+}
