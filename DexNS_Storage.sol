@@ -39,6 +39,7 @@ contract DexNS_Storage {
     
     mapping (bytes32 => Resolution) public resolution;
     mapping (address => string) public assignation;
+    mapping (bytes32 => address) public name_assignation;
     
     function DexNS_Storage()
     {
@@ -209,11 +210,23 @@ contract DexNS_Storage {
     function assignName(string _name) only_frontend
     {
         assignation[msg.sender] = _name;
+        name_assignation[sha256(_name)] = msg.sender;
+    }
+    
+    function unassignName(string _name) only_frontend
+    {
+        assignation[msg.sender] = "";
+        name_assignation[sha256(_name)] =0x0;
     }
     
     function assignation(address _assignee) constant returns (string _name)
     {
         return assignation[_assignee];
+    }
+    
+    function name_assignation(string _name) constant returns (address _assignee)
+    {
+        return name_assignation[sha256(_name)];
     }
     
     // DEBUG
