@@ -86,12 +86,6 @@ contract DexNS_Storage {
         return resolution[sig].metadata;
     }
     
-    function slicedMetadataOf(string _name) constant returns (uint _len, uint _ptr) 
-    {
-        bytes32 sig = bytes32(sha256(_name));
-        return (toSlice(resolution[sig].metadata)._len, toSlice(resolution[sig].metadata)._ptr);
-    }
-    
     function addressOf(string _name) constant returns (address _addr) 
     {
         bytes32 sig = bytes32(sha256(_name));
