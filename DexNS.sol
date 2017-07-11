@@ -45,7 +45,7 @@ import './strings.sol';
     
     event Error(bytes32);
     event NamePriceChanged(uint indexed _price);
-    event OwningTimeChanged(uint indexed _blocks);
+    event OwningTimeChanged(uint indexed _period);
     event DebugDisabled();
     
     DexNS_Storage public db;
