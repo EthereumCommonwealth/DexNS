@@ -48,7 +48,7 @@ import './strings.sol';
     event OwningTimeChanged(uint indexed _blocks);
     event DebugDisabled();
     
-    DexNS_Storage db;
+    DexNS_Storage public db;
     
     modifier only_owner
     {
@@ -109,18 +109,6 @@ import './strings.sol';
             }
         }
         throw;
-    }
-
-    function metadataOf(string _name) constant returns (string _metadata)
-    {
-        slice memory s;
-        (s._len, s._ptr) = db.slicedMetadataOf(_name);
-        return toString(s);
-    }
-
-    function slicedMetadataOf(string _name) constant returns (uint _len, uint _ptr)
-    {
-        return db.slicedMetadataOf(_name);
     }
     
     function addressOf(string _name) constant returns (address _addr)
