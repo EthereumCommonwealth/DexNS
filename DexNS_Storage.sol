@@ -1,6 +1,9 @@
 pragma solidity ^0.4.11;
 
+import './strings.sol';
+
 contract DexNS_Storage {
+    using strings for *;
      
     event Error(bytes32);
     
@@ -53,11 +56,11 @@ contract DexNS_Storage {
         return bytes32(sha256(_name));
     }
     
-    function registerName(string _name) only_frontend returns (bool _ok)
+    function registerName(address _from, string _name) only_frontend returns (bool _ok)
     {
         bytes32 sig = bytes32(sha256(_name));
-        resolution[sig].owner = msg.sender;
-        resolution[sig].addr = msg.sender;
+        resolution[sig].owner = _from;
+        resolution[sig].addr = _from;
         resolution[sig].metadata = "registered";
         resolution[sig].hideOwner = false;
         resolution[sig].signature = sig;
@@ -77,10 +80,16 @@ contract DexNS_Storage {
         }
     }
     
-    function metadataOf(string _name) constant returns (string _value) 
+    function metadataOf(string _name) constant returns (string memory _value) 
     {
         bytes32 sig = bytes32(sha256(_name));
         return resolution[sig].metadata;
+    }
+    
+    function slicedMetadataOf(string _name) constant returns (uint _len, uint _ptr) 
+    {
+        bytes32 sig = bytes32(sha256(_name));
+        return (toSlice(resolution[sig].metadata)._len, toSlice(resolution[sig].metadata)._ptr);
     }
     
     function addressOf(string _name) constant returns (address _addr) 
@@ -103,41 +112,20 @@ contract DexNS_Storage {
     function updateName(string _name, address _addr, string _value) only_frontend
     {
         bytes32 sig = bytes32(sha256(_name));
-        if(msg.sender == resolution[sig].owner) 
-        {
-            resolution[sig].addr = _addr;
-            resolution[sig].metadata = _value;
-        }
-        else 
-        {
-            throw;
-        }
+        resolution[sig].addr = _addr;
+        resolution[sig].metadata = _value;
     }
     
     function updateName(string _name, string _value) only_frontend
     {
         bytes32 sig = bytes32(sha256(_name));
-        if(msg.sender == resolution[sig].owner) 
-        {
-            resolution[sig].metadata = _value;
-        }
-        else 
-        {
-            throw;
-        }
+        resolution[sig].metadata = _value;
     }
     
     function updateName(string _name, address _address) only_frontend
     {
         bytes32 sig = bytes32(sha256(_name));
-        if(msg.sender == resolution[sig].owner) 
-        {
-            resolution[sig].addr = _address;
-        }
-        else 
-        {
-            throw;
-        }
+        resolution[sig].addr = _address;
     }
     
     
@@ -207,27 +195,13 @@ contract DexNS_Storage {
     function appendNameMetadata(string _name, string _value) only_frontend
     {
         bytes32 sig = bytes32(sha256(_name));
-        if(msg.sender == resolution[sig].owner)
-        {
-            resolution[sig].metadata = StringAppend(resolution[sig].metadata, _value);
-        }
-        else
-        {
-            throw;
-        }
+        resolution[sig].metadata = StringAppend(resolution[sig].metadata, _value);
     }
     
     function changeNameOwner(string _name, address _newOwner) only_frontend
     {
         bytes32 sig = bytes32(sha256(_name));
-        if(msg.sender == resolution[sig].owner)
-        {
-            resolution[sig].owner = _newOwner;
-        }
-        else
-        {
-            throw;
-        }
+        resolution[sig].owner = _newOwner;
     }
     
     
@@ -235,26 +209,12 @@ contract DexNS_Storage {
     function hideNameOwner(string _name, bool _hide) only_frontend
     {
         bytes32 sig = bytes32(sha256(_name));
-        if(msg.sender == resolution[sig].owner)
-        {
-            resolution[sig].hideOwner = _hide;
-        }
-        else
-        {
-            throw;
-        }
+        resolution[sig].hideOwner = _hide;
     }
     
-    function Assign(string _name)
+    function assignName(string _name) only_frontend
     {
-        if(resolution[sha256(_name)].owner == msg.sender)
-        {
-            assignation[msg.sender] = _name;
-        }
-        else
-        {
-            throw;
-        }
+        assignation[msg.sender] = _name;
     }
     
     function assignation(address _assignee) constant returns (string _name)
