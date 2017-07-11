@@ -161,6 +161,11 @@ import './strings.sol';
         db.assignName(_name);
     }
     
+    function unassignName(string _name) only_name_owner(_name)
+    {
+        db.unassignName(_name);
+    }
+    
     struct slice
     {
         uint _len;
