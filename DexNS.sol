@@ -1,6 +1,7 @@
 pragma solidity ^0.4.11;
 
 import './DexNS_Storage.sol';
+import './strings.sol';
 
  /**
  * Dexaran Naming Service
@@ -40,6 +41,8 @@ import './DexNS_Storage.sol';
  
  contract DexNS
  {
+    using strings for *;
+    
     event Error(bytes32);
     event NamePriceChanged(uint indexed _price);
     event OwningTimeChanged(uint indexed _blocks);
@@ -49,14 +52,21 @@ import './DexNS_Storage.sol';
     
     modifier only_owner
     {
-        if (msg.sender!=owner)
+        if ( msg.sender != owner )
+            throw;
+        _;
+    }
+    
+    modifier only_name_owner(string _name)
+    {
+        if ( msg.sender != db.ownerOf(_name) )
             throw;
         _;
     }
     
     modifier only_debug
     {
-        if (!debug)
+        if ( !debug )
             throw;
         _;
     }
@@ -64,66 +74,113 @@ import './DexNS_Storage.sol';
     address public owner;
     bool public debug = true;
     uint public owningTime = 31536000; //1 year in seconds
-    uint public namePrice = 1000000000000000000;
+    uint public namePrice = 0;
     
     mapping (bytes32 => uint256) public expirations;
     
-    function DexNS() {
+    function DexNS()
+    {
         owner=msg.sender;
-        db = DexNS_Storage(0x488c9e2df11ac9d19eb07df362cb174ffd4724d8);
+        db = DexNS_Storage(0xB9D8c88Ff6eE7f26B9484FAAf6DbFC7bc3f04A64);
+        bytes32 _sig = sha256("DexNS comission");
+        expirations[_sig] = 99999999999999999999;
     }
     
     
     
-    function name(string _name) constant returns (bytes32 hash) {
+    function name(string _name) constant returns (bytes32 hash)
+    {
         return bytes32(sha256(_name));
     }
     
-    function registerName(string _name) payable returns (bool ok) {
-        if(!(msg.value < namePrice)) {
+    function registerName(string _name) payable returns (bool ok)
+    {
+        if(!(msg.value < namePrice))
+        {
             bytes32 _sig = sha256(_name);
             if(expirations[_sig] < now)
             {
-                db.registerName(_name);
-                if (db.addressOf("DexNS comission").send(msg.value)) {
+                db.registerName(msg.sender, _name);
+                expirations[_sig] += owningTime;
+                if (db.addressOf("DexNS comission").send(msg.value))
+                {
                     return true;
                 }
             }
         }
         throw;
     }
+
+    function metadataOf(string _name) constant returns (string _metadata)
+    {
+        slice memory s;
+        (s._len, s._ptr) = db.slicedMetadataOf(_name);
+        return toString(s);
+    }
+
+    function slicedMetadataOf(string _name) constant returns (uint _len, uint _ptr)
+    {
+        return db.slicedMetadataOf(_name);
+    }
     
-    function addressOf(string _name) constant returns (address _addr) {
+    function addressOf(string _name) constant returns (address _addr)
+    {
         return db.addressOf(_name);
     }
 
-    function ownerOf(string _name) constant returns (address _owner) {
+    function ownerOf(string _name) constant returns (address _owner)
+    {
         return db.ownerOf(_name);
     }
     
-    function endtimeOf(string _name) constant returns (uint _expires) {
+    function endtimeOf(string _name) constant returns (uint _expires)
+    {
         return expirations[sha256(_name)];
     }
     
-    
-    function updateName(string _name, address _addr, string _value) {
+    function updateName(string _name, address _addr, string _value) only_name_owner(_name)
+    {
         db.updateName(_name, _addr, _value);
     }
     
-    function updateName(string _name, string _value) {
+    function updateName(string _name, string _value) only_name_owner(_name)
+    {
         db.updateName(_name, _value);
     }
     
-    function updateName(string _name, address _addr) {
+    function updateName(string _name, address _addr) only_name_owner(_name)
+    {
         db.updateName(_name, _addr);
     }
     
-    struct slice {
+    function appendNameMetadata(string _name, string _value) only_name_owner(_name)
+    {
+        db.appendNameMetadata(_name, _value);
+    }
+    
+    function changeNameOwner(string _name, address _newOwner) only_name_owner(_name)
+    {
+        db.changeNameOwner(_name, _newOwner);
+    }
+    
+    function hideNameOwner(string _name, bool _hide) only_name_owner(_name)
+    {
+        db.hideNameOwner(_name, _hide);
+    }
+    
+    function assignName(string _name) only_name_owner(_name)
+    {
+        db.assignName(_name);
+    }
+    
+    struct slice
+    {
         uint _len;
         uint _ptr;
     }
     
-    function toSlice(string self) private returns (slice) {
+    function toSlice(string self) private returns (slice)
+    {
         uint ptr;
         assembly {
             ptr := add(self, 0x20)
@@ -131,7 +188,8 @@ import './DexNS_Storage.sol';
         return slice(bytes(self).length, ptr);
     }
     
-    function memcpy(uint dest, uint src, uint len) private {
+    function memcpy(uint dest, uint src, uint len) private
+    {
         // Copy word-length chunks while possible
         for(; len >= 32; len -= 32) {
             assembly {
@@ -150,7 +208,8 @@ import './DexNS_Storage.sol';
         }
     }
     
-    function concat(slice self, slice other) private returns (string) {
+    function concat(slice self, slice other) private returns (string)
+    {
         var ret = new string(self._len + other._len);
         uint retptr;
         assembly { retptr := add(ret, 32) }
@@ -174,21 +233,6 @@ import './DexNS_Storage.sol';
         return concat(toSlice(_str1), toSlice(_str2));
     }
     
-    function appendNameMetadata(string _name, string _value)
-    {
-        db.appendNameMetadata(_name, _value);
-    }
-    
-    function changeNameOwner(string _name, address _newOwner)
-    {
-        db.changeNameOwner(_name, _newOwner);
-    }
-    
-    function hideNameOwner(string _name, bool _hide)
-    {
-        db.hideNameOwner(_name, _hide);
-    }
-    
     function extendNameBindingTime(string _name) payable
     {
         if(msg.value > namePrice)
@@ -201,31 +245,41 @@ import './DexNS_Storage.sol';
     }
     
     
+    function change_Storage_Address(address _newStorage) only_owner
+    {
+        db = DexNS_Storage(_newStorage);
+    }
     
-    function change_Owner(address _newOwner) only_owner {
+    function change_Owner(address _newOwner) only_owner
+    {
         owner=_newOwner;
     }
     
-    function disable_Debug() only_owner only_debug {
+    function disable_Debug() only_owner only_debug
+    {
         debug=false;
         DebugDisabled();
     }
     
-    function set_Owning_Time(uint _newOwningTime) only_owner only_debug {
+    function set_Owning_Time(uint _newOwningTime) only_owner only_debug
+    {
         owningTime = _newOwningTime;
         OwningTimeChanged(_newOwningTime);
     }
     
-    function change_Name_Price(uint _newNamePrice) only_owner only_debug {
+    function change_Name_Price(uint _newNamePrice) only_owner only_debug
+    {
         namePrice = _newNamePrice;
         NamePriceChanged(_newNamePrice);
     }
     
-    function dispose() only_owner only_debug {
+    function dispose() only_owner only_debug
+    {
         selfdestruct(owner);
     }
     
-    function delegateCall(address _target, uint _gas, bytes _data) payable only_owner {
+    function delegateCall(address _target, uint _gas, bytes _data) payable only_owner only_debug
+    {
         if(!_target.call.value(_gas)(_data))
         {
             Error(0);
