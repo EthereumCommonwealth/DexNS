@@ -111,16 +111,6 @@ import './strings.sol';
         throw;
     }
     
-    function addressOf(string _name) constant returns (address _addr)
-    {
-        return db.addressOf(_name);
-    }
-
-    function ownerOf(string _name) constant returns (address _owner)
-    {
-        return db.ownerOf(_name);
-    }
-    
     function endtimeOf(string _name) constant returns (uint _expires)
     {
         return expirations[sha256(_name)];
