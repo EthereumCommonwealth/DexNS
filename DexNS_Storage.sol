@@ -30,25 +30,25 @@ contract DexNS_Storage {
     
     struct Resolution
     {
-        address   owner;
-        address   addr;
-        string    metadata;
-        bool      hideOwner; // do-not-return-owner variable
-        bytes32   signature;
+        address  owner;
+        address addr;
+        string metadata;
+        bool hideOwner; // do-not-return-owner variable
+        bytes32 signature;
     }
     
     mapping (bytes32 => Resolution) public resolution;
-    mapping (address => string)     public assignation;
-    mapping (bytes32 => address)    public name_assignation;
+    mapping (address => string) public assignation;
+    mapping (bytes32 => address) public name_assignation;
     
     function DexNS_Storage()
     {
         owner=msg.sender;
-        bytes32    sig            = bytes32(sha256("DexNS commission"));
-        resolution[sig].owner     = msg.sender;
-        resolution[sig].addr      = msg.sender;
+        bytes32 sig = bytes32(sha256("DexNS commission"));
+        resolution[sig].owner = msg.sender;
+        resolution[sig].addr = msg.sender;
         resolution[sig].signature = sig;
-        resolution[sig].metadata  = "-ETC";
+        resolution[sig].metadata = "-ETC";
     }
     
     
@@ -60,11 +60,22 @@ contract DexNS_Storage {
     
     function registerName(address _from, string _name) only_frontend returns (bool _ok)
     {
-        bytes32    sig            = bytes32(sha256(_name));
-        resolution[sig].owner     = _from;
-        resolution[sig].addr      = _from;
-        resolution[sig].metadata  = "-ETC";
+        bytes32 sig = bytes32(sha256(_name));
+        resolution[sig].owner = _from;
+        resolution[sig].addr = _from;
+        resolution[sig].metadata = "-ETC";
         resolution[sig].hideOwner = false;
+        resolution[sig].signature = sig;
+        return true;
+    }
+    
+    function registerAndUpdateName(string _name, address _owner, address _destination, string _metadata, bool _hideOwner) only_frontend returns (bool _ok)
+    {
+        bytes32 sig = bytes32(sha256(_name));
+        resolution[sig].owner = _owner;
+        resolution[sig].addr = _destination;
+        resolution[sig].metadata = _metadata;
+        resolution[sig].hideOwner = _hideOwner;
         resolution[sig].signature = sig;
         return true;
     }
@@ -113,8 +124,8 @@ contract DexNS_Storage {
     
     function updateName(string _name, address _addr, string _value) only_frontend
     {
-        bytes32    sig           = bytes32(sha256(_name));
-        resolution[sig].addr     = _addr;
+        bytes32 sig = bytes32(sha256(_name));
+        resolution[sig].addr = _addr;
         resolution[sig].metadata = _value;
     }
     
