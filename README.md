@@ -18,6 +18,39 @@ ns.addressOf("Bit Ether Coin").call(_gas)(_data);
 Addresses or data can be accessed from the external contract. 
 Naming Service content can't be blocked, removed or censored in any other way. Everyone is allowed to do whatever he/she wants with it.
 
+### Metadata specification
+
+As DexNS is planned to be used as crosschain smart-contract naming service, I advise to use the first flag for chain identifier. User interface that will work with DexNS **MUST** warn user if he is trying to send a transaction by the DexNS name that doesn't match the currently selected network.
+
+Use the following chain identifier flags:
+
+`-ETC` for Ethereum CLassic chain.
+
+`-ETH` for Ethereum chain.
+
+`-UBQ` for Ubiq chain.
+
+`-EXP` for Expanse chain.
+
+`-ROP` for Ropsten.
+
+`-RIN` for Rinkeby.
+
+`-KOV` for Kovan.
+
+Use the following key flags before data chunks:
+
+`-A ` for ABI.
+
+`-L ` for attached link.
+
+`-S ` for source code reference.
+
+`-i`  for informational data chunk.
+
+Example of metadata for DexNS contract:
+`-ETC -L https://author.me/ -S https://github.com/source -A [{"constant":false,"inputs":[],"name":"foo","outputs":[],"payable":false,"type":"function"}]`
+
 # Details 
 
 - `Name` is a key-phrase that will be associated with name data. Each `Name` contains:
@@ -257,16 +290,6 @@ Changes owner of the contract to `_newOwner`.
 event Error(bytes32)
 ```
 Triggered when error occurs.
-
-## Metadata specification
-
-Use key flags before data chunks.
-`-A ` for ABI.
-`-L ` for attached link.
-`-S ` for source code reference.
-
-Example of metadata for DexNS contract:
-`-L https://author.me/ -S https://github.com/source -A [{"constant":false,"inputs":[],"name":"foo","outputs":[],"payable":false,"type":"function"}]`
 
 ## Notes
 
