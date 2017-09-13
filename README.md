@@ -20,11 +20,12 @@ You can access this contract directly by following this small guide:
 
 Service provides an opportunity to register a key-phrase 'Name' and to associate one address (wallet or contract) and one string variable with each key-phrase. External contracts can access Naming Service variables:
 
-`NamingService ns= new NamingService();`
+```js
 
-`ns.addressOf("Bit Ether Coin").call(_gas)(_data);`
-
-`//this will initiate a call of address associated with "Bit Ether Coin" string.`
+NamingService ns= new NamingService();
+ns.addressOf("Bit Ether Coin").call(_gas)(_data);
+//this will initiate a call of address associated with "Bit Ether Coin" string.
+```
 
 I don't insist on how to use contract functions. You can utilize string variable in any way you want. Offchain resources like emails, links or whatever else is needed.
 For example "Dexaran" word is associated with "https://github.com/Dexaran/" link. Also key-phrase "TheDAO hacker" is associated with his address and he is the owner of this Name.
