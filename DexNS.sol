@@ -5,9 +5,19 @@ import './safeMath.sol';
 import './strings.sol';
 
  /**
- * Dexaran Naming Service
- * simple analogue of ENS or ECNS
- * WARNING! This is the very unfinished version!
+ * The following is an implementation of the Naming Service that aims to boost
+ * the usability of smart-contracts and provide a human-friendly utility
+ * to work with low-level smart-contract interactions.
+ * 
+ * In addition it can be used as a central controlling unit of the system
+ * with dynamically linked smart-contracts.
+ * 
+ * Current implementation aims to simplify searches by contract names
+ * and automated loading of ABIs for smart-contracts. 
+ * This can be used to provide an automated token adding
+ * to the web wallet interfaces like ClassicEtherWallet as well.
+ *
+ * Designed by Dexaran, dexaran820@gmail.com
  */
  
  contract DexNS_Interface {
@@ -49,7 +59,7 @@ import './strings.sol';
     event OwningTimeChanged(uint indexed _period);
     event DebugDisabled();
     event NameRegistered(string _name, address indexed _owner);
-    event NameUpdated(string _name);
+    event NameUpdated(bytes32 indexed _signature);
     
     DexNS_Storage public db;
     
@@ -123,31 +133,37 @@ import './strings.sol';
     function updateName(string _name, address _addr, string _value) only_name_owner(_name)
     {
         db.updateName(_name, _addr, _value);
+        NameUpdated(db.signatureOf(_name));
     }
     
     function updateName(string _name, string _value) only_name_owner(_name)
     {
         db.updateName(_name, _value);
+        NameUpdated(db.signatureOf(_name));
     }
     
     function updateName(string _name, address _addr) only_name_owner(_name)
     {
         db.updateName(_name, _addr);
+        NameUpdated(db.signatureOf(_name));
     }
     
     function appendNameMetadata(string _name, string _value) only_name_owner(_name)
     {
         db.appendNameMetadata(_name, _value);
+        NameUpdated(db.signatureOf(_name));
     }
     
     function changeNameOwner(string _name, address _newOwner) only_name_owner(_name)
     {
         db.changeNameOwner(_name, _newOwner);
+        NameUpdated(db.signatureOf(_name));
     }
     
     function hideNameOwner(string _name, bool _hide) only_name_owner(_name)
     {
         db.hideNameOwner(_name, _hide);
+        NameUpdated(db.signatureOf(_name));
     }
     
     function assignName(string _name) only_name_owner(_name)
