@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.15;
 
 import './strings.sol';
 
@@ -11,7 +11,7 @@ contract DexNS_Storage {
     {
         if ( msg.sender != owner )
         {
-            throw;
+            revert();
         }
         _;
     }
@@ -20,7 +20,7 @@ contract DexNS_Storage {
     {
         if ( msg.sender != frontend_contract )
         {
-            throw;
+            revert();
         }
         _;
     }
@@ -44,10 +44,11 @@ contract DexNS_Storage {
     function DexNS_Storage()
     {
         owner=msg.sender;
-        bytes32 sig = bytes32(sha256("DexNS comission"));
+        bytes32 sig = bytes32(sha256("DexNS commission"));
         resolution[sig].owner = msg.sender;
         resolution[sig].addr = msg.sender;
         resolution[sig].signature = sig;
+        resolution[sig].metadata = "-ETC";
     }
     
     
@@ -62,7 +63,7 @@ contract DexNS_Storage {
         bytes32 sig = bytes32(sha256(_name));
         resolution[sig].owner = _from;
         resolution[sig].addr = _from;
-        resolution[sig].metadata = "registered";
+        resolution[sig].metadata = "-ETC";
         resolution[sig].hideOwner = false;
         resolution[sig].signature = sig;
         return true;
@@ -98,7 +99,7 @@ contract DexNS_Storage {
         bytes32 sig = bytes32(sha256(_name));
         if(resolution[sig].hideOwner) 
         {
-            throw;
+            revert();
         }
         return resolution[sig].owner;
     }
