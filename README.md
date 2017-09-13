@@ -32,6 +32,8 @@ You can register Name and became its owner. You will own the name before the exp
 
 ### Functions
 
+### `DexNS.sol` contract
+
 ##### registerName
 
 ```js
@@ -52,7 +54,7 @@ function ownerOf(string _name) constant returns (address _owner)
 ```
 Returns `owner` of the name.
 
-#### endtimeOf
+##### endtimeOf
 ```js
 function endtimeOf(string _name) constant returns (uint _expires)
 ```
@@ -60,7 +62,7 @@ Returns timestamp when the name will become free to re-register. Returns 0 for n
 
 NOTE: `endtime` is stored at the logical contract. Not in storage. Logic of registering and freeing names is part of logical contract. Storage only accepts calls from it.
 
-#### updateName
+##### updateName
 ```js
 function updateName(string _name, address _addr, string _value) { }
 function updateName(string _name, address _addr) { }
@@ -69,19 +71,19 @@ function updateName(string _name, string _value) { }
 
 Changes the contents of `_name` and sets the provided parameters.
 
-#### appendNameMetadata
+##### appendNameMetadata
 ```js
  function appendNameMetadata(string _name, string _value)
 ```
 Adds the provided `_value` to the end of the already-existing metadata string of the `_name`.
 
-#### changeNameOwner
+##### changeNameOwner
 ```js
 function changeNameOwner(string _name, address _newOwner)
 ```
 Changes `_name` owner to `_newOwner`.
 
-#### hideNameOwner
+##### hideNameOwner
 ```js
 function hideNameOwner(string _name, bool _hide)
 ```
@@ -89,21 +91,21 @@ If `_hide` is true then `ownerOf(_name)` will `throw` whenever called.
 
 Rationale: add possibility to abort execution of transaction/call when someone is trying to interact with name `owner` from external contract. Address that is associated with each `_name` is `addressOf(_name)`, not `ownerOf(_name)` !
 
-#### assignName
+##### assignName
 ```js
 function assignName(string _name)
 ```
 
 Assigns `_name` to `msg.sender` if sender is an owner of the name.
 
-#### unassignName
+##### unassignName
 ```js
 function unassignName(string _name)
 ```
 
 Clears `_name` ussignation if `msg.sender` is an owner of the name.
 
-#### extendNameBindingTime
+##### extendNameBindingTime
 ```js
 function extendNameBindingTime(string _name) payable
 ```
@@ -112,35 +114,35 @@ Extends binding time of the `_name` by constant specified period if sender provi
 
 #### Debugging functions (for owner only)
 
-#### change_Storage_Address
+##### change_Storage_Address
 ```js
 function change_Storage_Address(address _newStorage)
 ```
 
 Changes address of the storage to `_newStorage`.
 
-#### change_Owner
+##### change_Owner
 ```js
 function change_Owner(address _newOwner)
 ```
 
 Changes owner of the contract to `_newOwner`.
 
-#### disable_Debug
+##### disable_Debug
 ```js
 function disable_Debug()
 ```
 
 Disables possibility to debug the contract.
 
-#### set_Owning_Time
+##### set_Owning_Time
 ```js
 function set_Owning_Time(uint _newOwningTime)
 ```
 
 Sets the specified time period for the name binding.
 
-#### change_Name_Price
+##### change_Name_Price
 ```js
 function change_Name_Price(uint _newNamePrice)
 ```
@@ -150,28 +152,28 @@ Sets the specified price for the name registering
 
 ## Events
 
-#### Error
+##### Error
 
 ```js
 event Error(bytes32)
 ```
 Triggered when error occurs.
 
-#### NamePriceChanged
+##### NamePriceChanged
 
 ```js
 event NamePriceChanged(uint indexed _price)
 ```
 Triggered when price of name is changed by the owner.
 
-#### OwningTimeChanged
+##### OwningTimeChanged
 
 ```js
 event OwningTimeChanged(uint indexed _period)
 ```
 Triggered when binding preiod of time is changed by the owner.
 
-#### DebugDisabled
+##### DebugDisabled
 
 ```js
 event DebugDisabled()
@@ -179,9 +181,9 @@ event DebugDisabled()
 Triggered when debug is disabled.
 
 
-### Storage contract
+### `DexNS_Storage.sol` contract
 
-#### functions that would be called from DexNS contract to modify state
+##### functions that would be called from DexNS contract to modify state
 
 ```js
 function registerName(string _name) payable returns (bool ok) { }
@@ -195,34 +197,34 @@ function assignName(string _name) { }
 function unassignName(string _name) { }
 ```
 
-### functions to return contract data state
+#### functions to return contract data state
 
-#### addressOf
+##### addressOf
 
 ```js
 function addressOf(string _name) constant returns (address _addr)
 ```
 Returns `address` of the destination of the name.
 
-#### ownerOf
+##### ownerOf
 ```js
 function ownerOf(string _name) constant returns (address _owner)
 ```
 Returns `owner` of the name.
 
-#### metadataOf
+##### metadataOf
 ```js
 function metadataOf(string _name) constant returns (string memory _value) 
 ```
 Returns `owner` of the name.
 
-#### assignation
+##### assignation
 ```js
  function assignation(address _assignee) constant returns (string _name)
 ```
 Returns `_name` that is currently assigned to `_assignee`.
 
-#### name_assignation
+##### name_assignation
 ```js
 function name_assignation(string _name) constant returns (address _assignee)
 ```
@@ -230,16 +232,16 @@ Returns `_assignee` address that is currently assigned to `_name`.
 
 
 
-#### Debugging functions (for owner only)
+##### Debugging functions (for owner only)
 
-#### change_FrontEnd
+##### change_FrontEnd
 ```js
 function change_FrontEnd(address _newFrontEnd)
 ```
 
 Changes address of the storage to `_newFrontEnd`.
 
-#### change_Owner
+##### change_Owner
 ```js
 function change_Owner(address _newOwner)
 ```
@@ -247,9 +249,9 @@ function change_Owner(address _newOwner)
 Changes owner of the contract to `_newOwner`.
 
 
-## Events
+### Events
 
-#### Error
+##### Error
 
 ```js
 event Error(bytes32)
