@@ -5,19 +5,9 @@ import './safeMath.sol';
 import './strings.sol';
 
  /**
- * The following is an implementation of the Naming Service that aims to boost
- * the usability of smart-contracts and provide a human-friendly utility
- * to work with low-level smart-contract interactions.
- * 
- * In addition it can be used as a central controlling unit of the system
- * with dynamically linked smart-contracts.
- * 
- * Current implementation aims to simplify searches by contract names
- * and automated loading of ABIs for smart-contracts. 
- * This can be used to provide an automated token adding
- * to the web wallet interfaces like ClassicEtherWallet as well.
- *
- * Designed by Dexaran, dexaran820@gmail.com
+ * Dexaran Naming Service
+ * simple analogue of ENS or ECNS
+ * WARNING! This is the very unfinished version!
  */
  
  contract DexNS_Interface {
@@ -60,6 +50,8 @@ import './strings.sol';
     event DebugDisabled();
     event NameRegistered(string _name, address indexed _owner);
     event NameUpdated(bytes32 indexed _signature);
+    event Assignment(address indexed _owner, string _name);
+    event Unassignment(address indexed _owner, string _name);
     
     DexNS_Storage public db;
     
@@ -169,11 +161,13 @@ import './strings.sol';
     function assignName(string _name) only_name_owner(_name)
     {
         db.assignName(_name);
+        Assignment(msg.sender, _name);
     }
     
     function unassignName(string _name) only_name_owner(_name)
     {
         db.unassignName(_name);
+        Unassignment(msg.sender, _name);
     }
     
     struct slice
