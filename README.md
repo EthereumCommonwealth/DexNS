@@ -22,9 +22,9 @@ Service provides an opportunity to register a key-phrase 'Name' and to associate
 
 ```js
 
+// The following will initiate a call of address associated with "Bit Ether Coin" string.
 NamingService ns= new NamingService();
 ns.addressOf("Bit Ether Coin").call(_gas)(_data);
-//this will initiate a call of address associated with "Bit Ether Coin" string.
 ```
 
 I don't insist on how to use contract functions. You can utilize string variable in any way you want. Offchain resources like emails, links or whatever else is needed.
