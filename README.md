@@ -22,7 +22,8 @@ Service provides an opportunity to register a key-phrase 'Name' and to associate
 
 ```js
 
-// The following will initiate a call of address associated with "Bit Ether Coin" string.
+// The following will initiate a call of address,
+// that is associated with "Bit Ether Coin" string.
 NamingService ns= new NamingService();
 ns.addressOf("Bit Ether Coin").call(_gas)(_data);
 ```
