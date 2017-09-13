@@ -99,7 +99,7 @@ import './strings.sol';
         return bytes32(sha256(_name));
     }
     
-    function registerAndUpdateName(string _name, address _owner, address _destination, string _metadata, bool _hideOwner) returns (bool ok)
+    function registerAndUpdateName(string _name, address _owner, address _destination, string _metadata, bool _hideOwner) payable returns (bool ok)
     {
         if(!(msg.value < namePrice))
         {
