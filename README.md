@@ -1,5 +1,4 @@
-# Dexaran Naming Service
-Naming Service is a part of [Dexaran Bursary System](https://github.com/Dexaran/Treasury).
+# Decentralized Naming Service
 
 This is the second version. Many updates are coming.
 ETC mainnet version: [0x2906797a0a56a0c60525245c01788ecd34063b80](https://gastracker.io/addr/0x2906797a0a56a0c60525245c01788ecd34063b80)
