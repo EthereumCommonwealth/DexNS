@@ -21,11 +21,11 @@ Naming Service content can't be blocked, removed or censored in any other way. E
 # Details 
 
 - `Name` is a key-phrase that will be associated with name data. Each `Name` contains:
-    - `owner` the owner of Name.
-    - `addr` associated address.
-    - `value` stringified associated data.
-    - `endblock` the number of block on which ownership of this Name expires.
-    - `signature` sha256 hash of this Name key-phrase.
+    - `owner`       the owner of Name.
+    - `addr`        associated address.
+    - `metadata`    stringified associated data.
+    - `hideOwner`   If set to `true` then the contract will `throw` any attempt to access `ownerOf(Name)`.
+    - `signature`   sha256 hash of this Name key-phrase.
     
 
 You can register Name and became its owner. You will own the name before the expiry of the `nameOwning` time. If no one will claim your Name after `expiration[Name]`, then you will continue to be the Name owner. If the Name will be re-registered after the expiration, then you will lose control over this Name. You can extend the term of ownership of the Name before it expires.
