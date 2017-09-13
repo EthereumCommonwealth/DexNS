@@ -103,6 +103,12 @@ contract DexNS_Storage {
         }
         return resolution[sig].owner;
     }
+
+    function signatureOf(string _name) constant returns (bytes32 _sig) 
+    {
+        bytes32 sig = bytes32(sha256(_name));
+        return sig;
+    }
     
     
     function updateName(string _name, address _addr, string _value) only_frontend
