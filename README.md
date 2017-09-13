@@ -72,7 +72,14 @@ You can register Name and became its owner. You will own the name before the exp
 ```js
 function registerName(string _name) payable returns (bool ok)
 ```
-Register a new name at Naming Service. `msg.sender` will become `owner` and `address` of this name. `metadata` will be set to "registered".
+Register a new name at Naming Service. `msg.sender` will become `owner` and `address` of this name. `metadata` will be set to "-ETC" by default.
+
+##### registerAndUpdateName
+
+```js
+function registerAndUpdateName(string _name, address _owner, address _destination, string _metadata, bool _hideOwner) payable returns (bool ok)
+```
+Register a new `_name` at Naming Service. `_owner` will become `owner` and `_destination` will become the `address` of this name. `metadata` of this Name will be set to `_metadata`. `hideOwner` status will be set to `_hideOwner`.
 
 ##### addressOf
 
@@ -216,10 +223,11 @@ Triggered when debug is disabled.
 
 ### `DexNS_Storage.sol` contract
 
-##### functions that would be called from DexNS contract to modify state
+##### functions that would be called from DexNS frontend contract to modify state
 
 ```js
 function registerName(string _name) payable returns (bool ok) { }
+function registerAndUpdateName(string, address, address, string, bool) returns (bool ok) { }
 function updateName(string _name, address _addr, string _value) { }
 function updateName(string _name, address _addr) { }
 function updateName(string _name, string _value) { }
