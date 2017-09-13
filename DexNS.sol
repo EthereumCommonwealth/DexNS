@@ -11,17 +11,18 @@ import './strings.sol';
  */
  
  contract DexNS_Interface {
-     function name(string)    constant returns (bytes32);
+     function name(string) constant returns (bytes32);
      function getName(string) constant returns (address _owner, address _associated, string _value, uint _end, bytes32 _sig);
      
-     function ownerOf(string)   constant returns (address);
+     function ownerOf(string) constant returns (address);
      function addressOf(string) constant returns (address);
-     function valueOf(string)   constant returns (string);
+     function valueOf(string) constant returns (string);
      function endtimeOf(string) constant returns (uint);
      function updateName(string, string);
      function updateName(string, address);
      function updateName(string, address, string);
      function registerName(string) payable returns (bool);
+     function registerAndUpdateName(string, address, address, string, bool);
      function changeNameOwner(string, address);
      function hideNameOwner(string);
      function extendNameBindingTime(string) payable;
@@ -77,17 +78,17 @@ import './strings.sol';
     }
     
     address public owner;
-    bool public debug      = true;
+    bool public debug = true;
     uint public owningTime = 31536000; //1 year in seconds
-    uint public namePrice  = 0;
+    uint public namePrice = 0;
     
     mapping (bytes32 => uint256) public expirations;
     
     function DexNS()
     {
-        owner             = msg.sender;
-        db                = DexNS_Storage(0xB9D8c88Ff6eE7f26B9484FAAf6DbFC7bc3f04A64);
-        bytes32     _sig  = sha256("DexNS commission");
+        owner=msg.sender;
+        db = DexNS_Storage(0xB9D8c88Ff6eE7f26B9484FAAf6DbFC7bc3f04A64);
+        bytes32 _sig = sha256("DexNS commission");
         expirations[_sig] = 99999999999999999999;
     }
     
@@ -96,6 +97,25 @@ import './strings.sol';
     function name(string _name) constant returns (bytes32 hash)
     {
         return bytes32(sha256(_name));
+    }
+    
+    function registerAndUpdateName(string _name, address _owner, address _destination, string _metadata, bool _hideOwner) returns (bool ok)
+    {
+        if(!(msg.value < namePrice))
+        {
+            bytes32 _sig = sha256(_name);
+            if(expirations[_sig] < now)
+            {
+                db.registerAndUpdateName(_name, _owner, _destination, _metadata, _hideOwner);
+                expirations[_sig] = safeAdd(now, owningTime);
+                if (db.addressOf("DexNS commission").send(msg.value))
+                {
+                    NameRegistered(_name, _owner);
+                    return true;
+                }
+            }
+        }
+        revert();
     }
     
     function registerName(string _name) payable returns (bool ok)
