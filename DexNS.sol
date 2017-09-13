@@ -11,18 +11,18 @@ import './strings.sol';
  */
  
  contract DexNS_Interface {
-     function name(string) constant returns (bytes32);
+     function name(string)    constant returns (bytes32);
      function getName(string) constant returns (address _owner, address _associated, string _value, uint _end, bytes32 _sig);
      
-     function ownerOf(string) constant returns (address);
+     function ownerOf(string)   constant returns (address);
      function addressOf(string) constant returns (address);
-     function valueOf(string) constant returns (string);
+     function valueOf(string)   constant returns (string);
      function endtimeOf(string) constant returns (uint);
      function updateName(string, string);
      function updateName(string, address);
      function updateName(string, address, string);
      function registerName(string) payable returns (bool);
-     function registerAndUpdateName(string, address, address, string, bool);
+     function registerAndUpdateName(string, address, address, string, bool) payable returns (bool);
      function changeNameOwner(string, address);
      function hideNameOwner(string);
      function extendNameBindingTime(string) payable;
@@ -78,17 +78,17 @@ import './strings.sol';
     }
     
     address public owner;
-    bool public debug = true;
+    bool public debug      = true;
     uint public owningTime = 31536000; //1 year in seconds
-    uint public namePrice = 0;
+    uint public namePrice  = 0;
     
     mapping (bytes32 => uint256) public expirations;
     
     function DexNS()
     {
-        owner=msg.sender;
-        db = DexNS_Storage(0xB9D8c88Ff6eE7f26B9484FAAf6DbFC7bc3f04A64);
-        bytes32 _sig = sha256("DexNS commission");
+        owner             = msg.sender;
+        db                = DexNS_Storage(0xB9D8c88Ff6eE7f26B9484FAAf6DbFC7bc3f04A64);
+        bytes32     _sig  = sha256("DexNS commission");
         expirations[_sig] = 99999999999999999999;
     }
     
@@ -274,7 +274,7 @@ import './strings.sol';
     
     function disable_Debug() only_owner only_debug
     {
-        debug=false;
+        debug = false;
         DebugDisabled();
     }
     
