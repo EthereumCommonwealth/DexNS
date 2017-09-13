@@ -3,7 +3,7 @@
 DexNS 3.0 contracts would be deployed soon.
 
 
-## Description
+# Description
 
 Service provides an opportunity to register a key-phrase 'Name' and associate one address (wallet or contract) and one string variable (metadata) with each key-phrase. External contracts can access Naming Service variables as follows:
 
@@ -32,21 +32,21 @@ You can register Name and became its owner. You will own the name before the exp
 
 ### Functions
 
-#### registerName
+##### registerName
 
 ```js
 function registerName(string _name) payable returns (bool ok)
 ```
 Register a new name at Naming Service. `msg.sender` will become `owner` and `address` of this name. `metadata` will be set to "registered".
 
-#### addressOf
+##### addressOf
 
 ```js
 function addressOf(string _name) constant returns (address _addr)
 ```
 Returns `address` of the destination of the name.
 
-#### ownerOf
+##### ownerOf
 ```js
 function ownerOf(string _name) constant returns (address _owner)
 ```
