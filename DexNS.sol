@@ -1,6 +1,7 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.15;
 
 import './DexNS_Storage.sol';
+import './safeMath.sol';
 import './strings.sol';
 
  /**
@@ -39,7 +40,7 @@ import './strings.sol';
  *}
  */
  
- contract DexNS
+ contract DexNS is safeMath
  {
     using strings for *;
     
@@ -47,27 +48,29 @@ import './strings.sol';
     event NamePriceChanged(uint indexed _price);
     event OwningTimeChanged(uint indexed _period);
     event DebugDisabled();
+    event NameRegistered(string _name, address indexed _owner);
+    event NameUpdated(string _name);
     
     DexNS_Storage public db;
     
     modifier only_owner
     {
         if ( msg.sender != owner )
-            throw;
+            revert();
         _;
     }
     
     modifier only_name_owner(string _name)
     {
         if ( msg.sender != db.ownerOf(_name) )
-            throw;
+            revert();
         _;
     }
     
     modifier only_debug
     {
         if ( !debug )
-            throw;
+            revert();
         _;
     }
     
@@ -101,14 +104,15 @@ import './strings.sol';
             if(expirations[_sig] < now)
             {
                 db.registerName(msg.sender, _name);
-                expirations[_sig] += owningTime;
-                if (db.addressOf("DexNS comission").send(msg.value))
+                expirations[_sig] = safeAdd(now, owningTime);
+                if (db.addressOf("DexNS commission").send(msg.value))
                 {
+                    NameRegistered(_name, msg.sender);
                     return true;
                 }
             }
         }
-        throw;
+        revert();
     }
     
     function endtimeOf(string _name) constant returns (uint _expires)
@@ -216,13 +220,13 @@ import './strings.sol';
         return concat(toSlice(_str1), toSlice(_str2));
     }
     
-    function extendNameBindingTime(string _name) payable
+    function extend_Name_Binding_Time(string _name) payable
     {
-        if(msg.value > namePrice)
+        if(msg.value >= namePrice)
         {
-           if(db.addressOf("DexNS comission").send(msg.value))
+           if(db.addressOf("DexNS commission").send(msg.value))
            {
-               expirations[sha256(_name)] += owningTime;
+               expirations[sha256(_name)] = safeAdd(now, owningTime);
            }
         }
     }
