@@ -38,21 +38,18 @@ You can register Name and became its owner. You will own the name before the exp
 
 ```js
 function registerName(string _name) payable returns (bool ok)
-```
-Register a new name at Naming Service. `msg.sender` will become `owner` and `address` of this name. `metadata` will be set to "registered".
+```Register a new name at Naming Service. `msg.sender` will become `owner` and `address` of this name. `metadata` will be set to "registered".
 
 ##### addressOf
 
 ```js
 function addressOf(string _name) constant returns (address _addr)
-```
-Returns `address` of the destination of the name.
+```Returns `address` of the destination of the name.
 
 ##### ownerOf
 ```js
 function ownerOf(string _name) constant returns (address _owner)
-```
-Returns `owner` of the name.
+```Returns `owner` of the name.
 
 ##### endtimeOf
 ```js
