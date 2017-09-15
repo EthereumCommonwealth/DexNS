@@ -253,7 +253,7 @@ contract DexNS_Storage {
         owner =_newOwner;
     }
     
-    function change_FrontEnd(address _newFrontEnd) only_owner {
+    function change_FrontEnd_Address(address _newFrontEnd) only_owner {
         frontend_contract = _newFrontEnd;
     }
 }
