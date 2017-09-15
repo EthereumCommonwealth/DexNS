@@ -2,6 +2,12 @@
 
 DexNS 3.0 contracts would be deployed soon.
 
+# Contracts
+
+DexNS storage contract: [0x429611c633806a03447391026a538a022e1e2731](https://gastracker.io/addr/0x429611c633806a03447391026a538a022e1e2731)
+
+DexNS frontend contract: [0x72a679df082871c8507b2712b13802bc337e6d53](https://gastracker.io/addr/0x72a679df082871c8507b2712b13802bc337e6d53)
+
 
 # Description
 
