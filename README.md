@@ -1,8 +1,8 @@
 # Decentralized Naming Service
 
-DexNS 3.0 contracts would be deployed soon.
-
 # Contracts
+
+DexNS 3.0 contracts are currently deployed on ETC mainnet.
 
 DexNS storage contract: [0x429611c633806a03447391026a538a022e1e2731](https://gastracker.io/addr/0x429611c633806a03447391026a538a022e1e2731)
 
