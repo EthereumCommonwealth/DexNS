@@ -87,7 +87,7 @@ import './strings.sol';
     function DexNS()
     {
         owner             = msg.sender;
-        db                = DexNS_Storage(0xB9D8c88Ff6eE7f26B9484FAAf6DbFC7bc3f04A64);
+        db                = DexNS_Storage(0x429611c633806a03447391026a538a022e1e2731);
         bytes32     _sig  = sha256("DexNS commission");
         expirations[_sig] = 99999999999999999999;
     }
