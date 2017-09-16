@@ -20,7 +20,7 @@ import './strings.sol';
  * Designed by Dexaran, dexaran820@gmail.com
  */
  
- contract DexNS_Interface {
+ contract DexNS_Abstract_Interface {
      function name(string)    constant returns (bytes32);
      function getName(string) constant returns (address _owner, address _associated, string _value, uint _end, bytes32 _sig);
      
@@ -45,8 +45,8 @@ import './strings.sol';
  *   address constant_name_service;
  *   function() payable
  *   {
- *        DNS a = DNS(constant_name_service);
- *        a.addressOf("DEX ICO").send(msg.value);
+ *        DexNS_Storage dexns = DexNS_Storage(constant_name_service);
+ *        dexns.addressOf("Recipient name").send(msg.value);
  *   }
  *}
  */
