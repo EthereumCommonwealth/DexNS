@@ -4,8 +4,14 @@
 
 DexNS 3.0 contracts are currently deployed on ETC mainnet.
 
+### DexNS_Frontend.sol
+
+This contract serves to register and manage Names.
 DexNS frontend contract: [0x72a679df082871c8507b2712b13802bc337e6d53](https://gastracker.io/addr/0x72a679df082871c8507b2712b13802bc337e6d53)
 
+### DexNS_Storage.sol
+
+This contract serves to access content of the already-registered Names.
 DexNS storage contract: [0x429611c633806a03447391026a538a022e1e2731](https://gastracker.io/addr/0x429611c633806a03447391026a538a022e1e2731)
 
 ## Interaction with DexNS
@@ -23,6 +29,7 @@ Example:
     dexns.addressOf("My Friend").transfer(100);
 ```
 
+DexNS contracts are deployed on **Ethereum CLassic mainnet**. You should connect to ETC network to work with DexNS contracts even if you want to access a data of the contract that is deployed on any of the alternative chains.
 
 # Description
 
