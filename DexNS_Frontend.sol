@@ -4,7 +4,7 @@ import './DexNS_Storage.sol';
 import './safeMath.sol';
 import './strings.sol';
 
- /**
+ /*
  * The following is an implementation of the Naming Service that aims to boost
  * the usability of smart-contracts and provide a human-friendly utility
  * to work with low-level smart-contract interactions.
@@ -17,7 +17,8 @@ import './strings.sol';
  * This can be used to provide an automated token adding
  * to the web wallet interfaces like ClassicEtherWallet as well.
  *
- * Designed by Dexaran, dexaran820@gmail.com
+ *  Designed by Dexaran, dexaran820@gmail.com
+ * 
  */
  
  contract DexNS_Abstract_Interface {
@@ -118,8 +119,12 @@ import './strings.sol';
             {
                 db.registerAndUpdateName(_name, _owner, _destination, _metadata, _hideOwner);
                 expirations[_sig] = safeAdd(now, owningTime);
-                if (db.addressOf("DexNS commission").send(msg.value))
+                if (db.addressOf("DexNS commission").send(namePrice))
                 {
+                    if(safeSub(msg.value, namePrice ) > 0)
+                    {
+                        msg.sender.transfer(msg.value - namePrice);
+                    }
                     NameRegistered(_name, _owner);
                     return true;
                 }
@@ -137,8 +142,12 @@ import './strings.sol';
             {
                 db.registerName(msg.sender, _name);
                 expirations[_sig] = safeAdd(now, owningTime);
-                if (db.addressOf("DexNS commission").send(msg.value))
+                if (db.addressOf("DexNS commission").send(namePrice))
                 {
+                    if(safeSub(msg.value, namePrice ) > 0)
+                    {
+                        msg.sender.transfer(msg.value - namePrice);
+                    }
                     NameRegistered(_name, msg.sender);
                     return true;
                 }
