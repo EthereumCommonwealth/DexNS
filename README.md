@@ -1,25 +1,32 @@
 # Decentralized Naming Service
 
-# Contracts
+## Contracts
 
 DexNS 3.0 contracts are currently deployed on ETC mainnet.
 
+DexNS frontend contract: [0x72a679df082871c8507b2712b13802bc337e6d53](https://gastracker.io/addr/0x72a679df082871c8507b2712b13802bc337e6d53)
+
 DexNS storage contract: [0x429611c633806a03447391026a538a022e1e2731](https://gastracker.io/addr/0x429611c633806a03447391026a538a022e1e2731)
 
-DexNS frontend contract: [0x72a679df082871c8507b2712b13802bc337e6d53](https://gastracker.io/addr/0x72a679df082871c8507b2712b13802bc337e6d53)
+## Interaction with DexNS
+
+To register or manage names you should call the [DexNS interface contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS.sol) contract (0x72a679df082871c8507b2712b13802bc337e6d53).
+
+To interact with the contents of already registered names, you should call [DexNS state storage contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS_Storage.sol) (0x429611c633806a03447391026a538a022e1e2731).
+
+DexNS can also be used as a control unit for dynamically linking contracts in a contract system. You should interact with state storage contract to access names.
+Example:
+
+```js
+// This will send 100 WEI to the "My Friend" address.
+DexNS dexns = new DexNS(0x429611c633806a03447391026a538a022e1e2731);
+dexns.addressOf("My Friend").send(100);
+```
 
 
 # Description
 
 Service provides an opportunity to register a key-phrase 'Name' and associate one address (wallet or contract) and one string variable (metadata) with each key-phrase. External contracts can access Naming Service variables as follows:
-
-```js
-
-// The following will initiate a call of address,
-// that is associated with "Bit Ether Coin" string.
-NamingService ns= new NamingService();
-ns.addressOf("Bit Ether Coin").call(_gas)(_data);
-```
 
 Addresses or data can be accessed from the external contract. 
 Naming Service content can't be blocked, removed or censored in any other way. Everyone is allowed to do whatever he/she wants with it.
