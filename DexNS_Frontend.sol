@@ -52,7 +52,7 @@ import './strings.sol';
  *}
  */
  
- contract DexNS_Interface is safeMath
+ contract DexNS_Frontend is safeMath
  {
     using strings for *;
     
@@ -95,7 +95,7 @@ import './strings.sol';
     
     mapping (bytes32 => uint256) public expirations;
     
-    function DexNS()
+    function DexNS_Frontend()
     {
         owner             = msg.sender;
         db                = DexNS_Storage(0x429611c633806a03447391026a538a022e1e2731);
