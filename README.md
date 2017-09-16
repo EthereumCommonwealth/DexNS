@@ -7,7 +7,7 @@ DexNS 3.0 contracts are currently deployed on ETC mainnet.
 #### DexNS_Frontend.sol
 
 This contract serves to register and manage Names.
-DexNS frontend contract: [0xd06f0fdbc826bf9e8d00830ac1379b8a48b88de8](https://gastracker.io/addr/0xd06f0fdbc826bf9e8d00830ac1379b8a48b88de8)
+DexNS frontend contract: [0x5e9b151eb9742c20679e1d96e5c3633678cab724](https://gastracker.io/addr/0x5e9b151eb9742c20679e1d96e5c3633678cab724)
 
 #### DexNS_Storage.sol
 
@@ -16,7 +16,7 @@ DexNS storage contract: [0x429611c633806a03447391026a538a022e1e2731](https://gas
 
 ## Interaction with DexNS
 
-To register or manage names you should call the [DexNS interface contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS.sol) contract (0xd06f0fdbc826bf9e8d00830ac1379b8a48b88de8).
+To register or manage names you should call the [DexNS interface contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS.sol) contract (0x5e9b151eb9742c20679e1d96e5c3633678cab724).
 
 To interact with the contents of already registered names, you should call [DexNS state storage contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS_Storage.sol) (0x429611c633806a03447391026a538a022e1e2731).
 
