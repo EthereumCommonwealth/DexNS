@@ -18,9 +18,9 @@ DexNS can also be used as a control unit for dynamically linking contracts in a 
 Example:
 
 ```js
-// This will send 100 WEI to the "My Friend" address.
-DexNS dexns = new DexNS(0x429611c633806a03447391026a538a022e1e2731);
-dexns.addressOf("My Friend").send(100);
+ // This will send 100 WEI to the "My Friend" address.
+    DexNS_Storage dexns = DexNS_Storage(0x429611c633806a03447391026a538a022e1e2731);
+    dexns.addressOf("My Friend").transfer(100);
 ```
 
 
