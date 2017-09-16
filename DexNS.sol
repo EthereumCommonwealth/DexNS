@@ -5,9 +5,19 @@ import './safeMath.sol';
 import './strings.sol';
 
  /**
- * Dexaran Naming Service
- * simple analogue of ENS or ECNS
- * WARNING! This is the very unfinished version!
+ * The following is an implementation of the Naming Service that aims to boost
+ * the usability of smart-contracts and provide a human-friendly utility
+ * to work with low-level smart-contract interactions.
+ * 
+ * In addition it can be used as a central controlling unit of the system
+ * with dynamically linked smart-contracts.
+ * 
+ * Current implementation aims to simplify searches by contract names
+ * and automated loading of ABIs for smart-contracts. 
+ * This can be used to provide an automated token adding
+ * to the web wallet interfaces like ClassicEtherWallet as well.
+ *
+ * Designed by Dexaran, dexaran820@gmail.com
  */
  
  contract DexNS_Interface {
@@ -41,7 +51,7 @@ import './strings.sol';
  *}
  */
  
- contract DexNS is safeMath
+ contract DexNS_Interface is safeMath
  {
     using strings for *;
     
