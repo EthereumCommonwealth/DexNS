@@ -38,6 +38,10 @@ Service provides an opportunity to register a key-phrase 'Name' and associate on
 Addresses or data can be accessed from the external contract. 
 Naming Service content can't be blocked, removed or censored in any other way. Everyone is allowed to do whatever he/she wants with it.
 
+# How do I register my ERC20/ERC223 token on DexNS?
+
+Coming soon ...
+
 ### Metadata specification
 
 As DexNS is planned to be used as crosschain smart-contract naming service, I advise to use the first flag for chain identifier. User interface that will work with DexNS **MUST** warn user if he is trying to send a transaction by the DexNS name that doesn't match the currently selected network.
