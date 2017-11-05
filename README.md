@@ -1,5 +1,12 @@
 # Decentralized Naming Service
 
+## Overview
+
+DexNS allows to register human-readable names that could be resolved into Ethereum hex-addresses. Currently, names are free. You can own your name within 1 year after the moment of registration. You can extend name ownership after the certain amount of time will pass. DexNS provides names in human-readable text format. DexNS contract allows any names of any lengths and any characters, but third party services such as ClassicEtherWallet may filter confusing characters and weird names. As the result, it is not recommended to register names with whitespaces and names ending in ENS tld resolutions ( .eth / .etc / .reverse ). You can register your e-mail address as Name for example ( `dexaran820@gmail.com` ). Any user will be able to send ETH, ETC, EXP, UBQ, MUSICOIN and testnet Ether to your address that is assigned to the registered name via ClassicEtherWallet. 
+
+(1) Yes, you can use one DexNS Name on multiple chains to receive different currencies such are ETH, ETC, EXP, UBQ.
+(2) Yes, you can store multiple currencies in one Ethereum wallet address.
+
 ## Contracts
 
 DexNS 3.0 contracts are currently deployed on ETC mainnet.
@@ -13,6 +20,26 @@ DexNS frontend contract: [0x5e9b151eb9742c20679e1d96e5c3633678cab724](https://ga
 
 This contract serves to access content of the already-registered Names.
 DexNS storage contract: [0x429611c633806a03447391026a538a022e1e2731](https://gastracker.io/addr/0x429611c633806a03447391026a538a022e1e2731)
+
+# How do I register a name?
+
+1. Navigate to ClassicEtherWallet [contracts tab](https://ethereumproject.github.io/etherwallet/?network=ETC#contracts).
+
+2. Choose DexNS Frontend Contract from default contracts list and click the "ACCESS" button. (make sure that contract address is `0x5e9b151eb9742c20679e1d96e5c3633678cab724`)
+
+3. (OPTIONAL: check name availability) Choose `endtimeOf` function name to check whether the name is available or not. 
+
+3.1 (OPTIONAL: check name availability) Type the desired name into `_name string` input box. You should just type Name in text format. For example `dexaran820@gmail.com`.
+
+3.2 (OPTIONAL: check name availability) Click "READ" button and check if the ` _expires uint256` field is equal to 0 or not. As you can see for `dexaran820@gmail.com` it is not equal to zero which means that this name is already owned. You can not register a name that is already owned. You should pick an another name in this case.
+
+4. Choose `registerName` function from the functions dropdown menu.
+
+5. Type the desired Name into `_name string` input box. You should enter the name in text format. You must enter a name in text format as it will be available to others.
+
+6. Unlock your wallet and click "WRITE" button. Make sure that you have provided enough gas for transaction to execute. You should keep in mind that longer Names will require more gas. 200 000 GAS is enough for most names.
+
+7. Wait for transaction to submit. You will immediately become the owner of the name after the transaction is successfully submitted to the block. You will own this Name for 1 year. After 1 year you should visit DexNS contract again if you would like to extend Name ownership.
 
 ## Interaction with DexNS
 
