@@ -43,7 +43,7 @@ DexNS storage contract: [0x429611c633806a03447391026a538a022e1e2731](https://gas
 
 ## Interaction with DexNS
 
-To register or manage names you should call the [DexNS interface contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS.sol) contract (0x5e9b151eb9742c20679e1d96e5c3633678cab724).
+To register or manage names you should call the [DexNS frontend contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS_Frontend.sol) contract (0x5e9b151eb9742c20679e1d96e5c3633678cab724).
 
 To interact with the contents of already registered names, you should call [DexNS state storage contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS_Storage.sol) (0x429611c633806a03447391026a538a022e1e2731).
 
@@ -116,7 +116,7 @@ You can register Name and became its owner. You will own the name before the exp
 
 ### Functions
 
-### `DexNS.sol` contract
+### `DexNS_Frontend.sol` contract
 
 ##### registerName
 
