@@ -1,9 +1,6 @@
 pragma solidity ^0.4.15;
 
-import './strings.sol';
-
 contract DexNS_Storage {
-    using strings for *;
      
     event Error(bytes32);
     
@@ -41,6 +38,9 @@ contract DexNS_Storage {
     mapping (address => string)     public assignation;
     mapping (bytes32 => address)    public name_assignation;
     
+     /** 
+     * @dev Constructor
+     */
     function DexNS_Storage()
     {
         owner                     = msg.sender;
@@ -51,13 +51,27 @@ contract DexNS_Storage {
         resolution[sig].metadata  = "-ETC";
     }
     
-    
-    
+    /** 
+    * @dev Returns keccak-256 hash of the Name.
+    * 
+    * @return hash The hash of the name.
+    */
     function name(string _name) constant returns (bytes32 _hash)
     {
         return bytes32(sha256(_name));
     }
     
+    /** 
+    * @dev Registers a new name with default content.
+    * 
+    * This function will return `true` in case of successful execution. It will revert() The
+    * transaction in case of failure and thus send back money.
+    * 
+    * @param _from  Address that attempts to register this Name.
+    * @param _name  The Name that the user wants to register.
+    * 
+    * @return ok    True on successful Name registration, false in any other cases.
+    */
     function registerName(address _from, string _name) only_frontend returns (bool _ok)
     {
         bytes32 sig               = bytes32(sha256(_name));
@@ -69,6 +83,20 @@ contract DexNS_Storage {
         return true;
     }
     
+    /** 
+    * @dev Registers a new name with predefined content.
+    * 
+    * This function will return `true` in case of successful execution. It will revert() The
+    * transaction in case of failure and thus send back money.
+    * 
+    * @param _name        The name that the user wants to register.
+    * @param _owner       Address that will become the owner of the Name after the registration.
+    * @param _destination The address to which this name will be indicated.
+    * @param _metadata    Metadata of the Name.
+    * @param _hideOwner   If true, then DexNS will throw on any attempt to access the name owner.
+    * 
+    * @return ok          True on successful Name registration, false in any other cases.
+    */
     function registerAndUpdateName(string _name, address _owner, address _destination, string _metadata, bool _hideOwner) only_frontend returns (bool _ok)
     {
         bytes32 sig               = bytes32(sha256(_name));
@@ -80,6 +108,17 @@ contract DexNS_Storage {
         return true;
     }
     
+    /** 
+    * @dev Returns a content of the Name.
+    * 
+    * @param _name        The name that the user wants to inspect.
+    * 
+    * @return _owner       Address that has permission to change a content of the Name.
+    *                     Returns 0 if `hideOwner` is set to true for this Name.
+    * @return _associatedAddress The address that is indicated to this Name.
+    * @return _value       Metadata of the Name.
+    * @return _signature   keccak-256 hash of the Name.
+    */
     function getName(string _name) constant returns (address _owner, address _associatedAddress, string _value, bytes32 _signature)
     {
         bytes32 sig = bytes32(sha256(_name));
@@ -93,18 +132,39 @@ contract DexNS_Storage {
         }
     }
     
+    /** 
+    * @dev Returns metadata of the Name.
+    * 
+    * @param _name        The name that the user wants to inspect.
+    * 
+    * @return _value       Metadata of the Name.
+    */
     function metadataOf(string _name) constant returns (string memory _value) 
     {
         bytes32 sig = bytes32(sha256(_name));
         return resolution[sig].metadata;
     }
     
+    /** 
+    * @dev Returns destination address of the Name.
+    * 
+    * @param _name        The name that the user wants to inspect.
+    * 
+    * @return _value       Metadata of the Name.
+    */
     function addressOf(string _name) constant returns (address _addr) 
     {
         bytes32 sig = bytes32(sha256(_name));
         return resolution[sig].addr;
     }
-
+    
+    /** 
+    * @dev Returns owner address of the Name or throws if the `hideOwner` is true for this name.
+    * 
+    * @param _name    The name that the user wants to inspect.
+    * 
+    * @return _owner  Address that has permission to change a content of this Name.
+    */
     function ownerOf(string _name) constant returns (address _owner) 
     {
         bytes32 sig = bytes32(sha256(_name));
@@ -114,14 +174,30 @@ contract DexNS_Storage {
         }
         return resolution[sig].owner;
     }
-
+    
+    /** 
+    * @dev Returns keccak-256 hash of the Name.
+    * 
+    * @param _name  The name that the user wants to inspect.
+    * 
+    * @return _sig  Keccak-256 hash of the Name.
+    */
     function signatureOf(string _name) constant returns (bytes32 _sig) 
     {
         bytes32 sig = bytes32(sha256(_name));
         return sig;
     }
     
-    
+    /** 
+    * @dev Updates a content of the Name.
+    * 
+    * Function is overloaded to allow any configurations of Name updates
+    * ie. update only destination address, only metadata or destination address and metadata.
+    *
+    * @param _name   Name that the user wants to update.
+    * @param _addr   The address to which this name will be resolved.
+    * @param _value  Metadata of the Name.
+    */
     function updateName(string _name, address _addr, string _value) only_frontend
     {
         bytes32    sig           = bytes32(sha256(_name));
@@ -129,12 +205,30 @@ contract DexNS_Storage {
         resolution[sig].metadata = _value;
     }
     
+    /** 
+    * @dev Updates a content of the Name.
+    * 
+    * Function is overloaded to allow any configurations of Name updates
+    * ie. update only destination address, only metadata or destination address and metadata.
+    *
+    * @param _name   Name that the user wants to update.
+    * @param _value  Metadata of the Name.
+    */
     function updateName(string _name, string _value) only_frontend
     {
         bytes32    sig           = bytes32(sha256(_name));
         resolution[sig].metadata = _value;
     }
     
+    /** 
+    * @dev Updates a content of the Name.
+    * 
+    * Function is overloaded to allow any configurations of Name updates
+    * ie. update only destination address, only metadata or destination address and metadata.
+    *
+    * @param _name   Name that the user wants to update.
+    * @param _addr   The address to which this name will be resolved.
+    */
     function updateName(string _name, address _address) only_frontend
     {
         bytes32    sig       = bytes32(sha256(_name));
@@ -205,49 +299,102 @@ contract DexNS_Storage {
         return concat(toSlice(_str1), toSlice(_str2));
     }
     
+    /** 
+    * @dev Updates a content of the Name.
+    * 
+    * Function is overloaded to allow any configurations of Name updates
+    * ie. update only destination address, only metadata or destination address and metadata.
+    *
+    * @param _name   Name that the user wants to update.
+    * @param _addr   The address to which this name will be resolved.
+    * @param _value  Metadata of the Name.
+    */
     function appendNameMetadata(string _name, string _value) only_frontend
     {
         bytes32    sig           = bytes32(sha256(_name));
         resolution[sig].metadata = StringAppend(resolution[sig].metadata, _value);
     }
     
+    /** 
+    * @dev Transfer ownership of the Name.
+    * 
+    * Frontend contract will call the handler function of the receiver
+    * if the receiver is a smart-contract.
+    *
+    * @param _name      Name that the user wants to update.
+    * @param _newOwner  Address to which a user want to transfer Name ownership.
+    */
     function changeNameOwner(string _name, address _newOwner) only_frontend
     {
         bytes32    sig        = bytes32(sha256(_name));
         resolution[sig].owner = _newOwner;
     }
     
-    
-    // @dev do not return owner on getName()
+    /** 
+    * @dev Set throw mode of the getName and ownerOf functions.
+    *
+    * @param _name  Name that the user wants to update.
+    * @param _hide  True will make contract throw, false will make it returning ower normally.
+    */
     function hideNameOwner(string _name, bool _hide) only_frontend
     {
         bytes32    sig            = bytes32(sha256(_name));
         resolution[sig].hideOwner = _hide;
     }
     
-    function assignName(string _name) only_frontend
+    /** 
+    * @dev Create the assignation between the Name and its owner's address.
+    * 
+    * This may be necessary for blockchain explorers to display a human-readable Name
+    * instead of hex address.
+    *
+    * @param _name         Name that will be assigned to the _destination address
+    *                      if the address is the owner of the Name.
+    * @param _destination  Address that will be assigned with the Name.
+    */
+    function assignName(string _name, address _destination) only_frontend
     {
-        assignation[msg.sender]         = _name;
-        name_assignation[sha256(_name)] = msg.sender;
+        assignation[_destination]       = _name;
+        name_assignation[sha256(_name)] = _destination;
     }
     
-    function unassignName(string _name) only_frontend
+    /** 
+    * @dev Destroy the assignation between the Name and its owner's address.
+    *
+    * @param _name         Name that will no longer be assigned to its owner's address.
+    * @param _destination  Address that will be unassigned.
+    */
+    function unassignName(string _name, address _destination) only_frontend
     {
-        assignation[msg.sender]         = "";
+        assignation[_destination]       = "";
         name_assignation[sha256(_name)] = 0x0;
     }
     
+    /** 
+    * @dev Returns a Name that is assigned to the address.
+    *
+    * @param _assignee  Address that a user wants to inspect.
+    * 
+    * @return _name     Name that is assigned to this address.
+    */
     function assignation(address _assignee) constant returns (string _name)
     {
         return assignation[_assignee];
     }
     
+    /** 
+    * @dev Returns an address that is assigned to the Name.
+    *
+    * @param _name       Name that a user wants to inspect.
+    * 
+    * @return _assignee  Address that is assigned to this Name.
+    */
     function name_assignation(string _name) constant returns (address _assignee)
     {
         return name_assignation[sha256(_name)];
     }
     
-    // DEBUG
+    // Debug functions.
     
     function change_Owner(address _newOwner) only_owner {
         owner =_newOwner;
