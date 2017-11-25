@@ -226,8 +226,8 @@ contract DexNS_Storage {
     * Function is overloaded to allow any configurations of Name updates
     * ie. update only destination address, only metadata or destination address and metadata.
     *
-    * @param _name   Name that the user wants to update.
-    * @param _addr   The address to which this name will be resolved.
+    * @param _name     Name that the user wants to update.
+    * @param _address  The address to which this name will be resolved.
     */
     function updateName(string _name, address _address) only_frontend
     {
@@ -300,14 +300,10 @@ contract DexNS_Storage {
     }
     
     /** 
-    * @dev Updates a content of the Name.
-    * 
-    * Function is overloaded to allow any configurations of Name updates
-    * ie. update only destination address, only metadata or destination address and metadata.
+    * @dev Appends the characters to current metadata of the Name.
     *
     * @param _name   Name that the user wants to update.
-    * @param _addr   The address to which this name will be resolved.
-    * @param _value  Metadata of the Name.
+    * @param _value  Characters to add to current metadata of the Name.
     */
     function appendNameMetadata(string _name, string _value) only_frontend
     {
