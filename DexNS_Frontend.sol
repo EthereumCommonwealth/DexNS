@@ -135,10 +135,11 @@ import './safeMath.sol';
     * @param _destination The address to which this name will be indicated.
     * @param _metadata    Metadata of the Name.
     * @param _hideOwner   If true, then DexNS will throw on any attempt to access the name owner.
+    * @param _assign      Assign Name to the _destination address after registration.
     * 
     * @return ok          True on successful Name registration, false in any other cases.
     */
-    function registerAndUpdateName(string _name, address _owner, address _destination, string _metadata, bool _hideOwner) payable returns (bool ok)
+    function registerAndUpdateName(string _name, address _owner, address _destination, string _metadata, bool _hideOwner, bool _assign) payable returns (bool ok)
     {
         if(!(msg.value < namePrice))
         {
@@ -146,6 +147,10 @@ import './safeMath.sol';
             if(expirations[_sig] < now)
             {
                 db.registerAndUpdateName(_name, _owner, _destination, _metadata, _hideOwner);
+                if(_assign)
+                {
+                    db.assignName(_name, _destination);
+                }
                 expirations[_sig] = safeAdd(now, owningTime);
                 if (db.addressOf("DexNS commission").send(namePrice))
                 {
@@ -307,7 +312,7 @@ import './safeMath.sol';
     */
     function assignName(string _name) only_name_owner(_name)
     {
-        db.assignName(_name);
+        db.assignName(_name, msg.sender);
         Assignment(msg.sender, _name);
     }
     
@@ -318,7 +323,7 @@ import './safeMath.sol';
     */
     function unassignName(string _name) only_name_owner(_name)
     {
-        db.unassignName(_name);
+        db.unassignName(_name, msg.sender);
         Unassignment(msg.sender, _name);
     }
     
