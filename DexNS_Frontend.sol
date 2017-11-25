@@ -298,6 +298,9 @@ import './safeMath.sol';
     
     /** 
     * @dev Create the assignation between the Name and its owner's address.
+    * 
+    * This may be necessary for blockchain explorers to display a human-readable Name
+    * instead of hex address.
     *
     * @param _name  Name that will be assigned to the callet's address
     *               if the address is the owner of the Name.
