@@ -350,6 +350,8 @@ contract DexNS_Storage {
     */
     function assignName(string _name, address _destination) only_frontend
     {
+        if(name_assignation[sha256(assignation[_destination])] != 0x0) throw;
+        
         assignation[_destination]       = _name;
         name_assignation[sha256(_name)] = _destination;
     }
