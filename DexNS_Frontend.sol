@@ -71,7 +71,7 @@ import './safeMath.sol';
     event NameUpdated(bytes32 indexed _signature);
     event NameTransferred(address indexed _sender, address indexed _receiver, bytes32 indexed _signature, bytes _data);
     event Assignment(address indexed _owner, string _name);
-    event Unassignment(address indexed _owner, string _name);
+    event Unassignment(string _name);
     
     DexNS_Storage public db;
     
@@ -311,13 +311,15 @@ import './safeMath.sol';
     * This may be necessary for blockchain explorers to display a human-readable Name
     * instead of hex address.
     *
-    * @param _name  Name that will be assigned to the callet's address
-    *               if the address is the owner of the Name.
+    * @param _name      Name that will be assigned to the _assignee's address
+    *                   if the address is the owner of the Name.
+    * @param _assignee  Address that will be assigned to this Name (this address
+    *                   could be replaced with the Name).
     */
-    function assignName(string _name) only_name_owner(_name)
+    function assignName(string _name, address _assignee) only_name_owner(_name)
     {
-        db.assignName(_name, msg.sender);
-        Assignment(msg.sender, _name);
+        db.assignName(_name, _assignee);
+        Assignment(_assignee, _name);
     }
     
     /** 
@@ -327,8 +329,8 @@ import './safeMath.sol';
     */
     function unassignName(string _name) only_name_owner(_name)
     {
-        db.unassignName(_name, msg.sender);
-        Unassignment(msg.sender, _name);
+        db.unassignName(_name);
+        Unassignment(_name);
     }
     
     /** 
