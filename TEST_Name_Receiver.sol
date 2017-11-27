@@ -9,6 +9,10 @@ pragma solidity ^0.4.15;
      
      function onNameOwnerChanged(string _name, address _sender, bytes _data) {
          I_have_received_a_name(_sender);
+         
+         if(_data.length > 0) {
+             this.call.value(0)(_data);
+         }
      }
      
      function internalInvocation(uint256 _num) {
