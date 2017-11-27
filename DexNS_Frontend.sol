@@ -37,7 +37,7 @@ import './safeMath.sol';
      function updateName(string, address, string);
      function registerName(string) payable returns (bool);
      function registerAndUpdateName(string, address, address, string, bool) payable returns (bool);
-     function changeNameOwner(string _name, address _newOwner, bool _notify, bytes _data);
+     function changeNameOwner(string, address, bytes);
      function hideNameOwner(string);
      function extendNameBindingTime(string) payable;
      function appendNameMetadata(string, string);
@@ -271,18 +271,19 @@ import './safeMath.sol';
     * 
     * If the user attempts to transfer the ownership of the Name
     * to the smart-contract then the `onNameOwnerChanged` function
-    * of the receiver contract should be executed.
+    * of the receiver contract should be executed. If the receiver contract
+    * does not implement the `onNameOwnerChanged` function then the fallback
+    * function of the receiver contract will be invoked.
     *
     * @param _name      Name that the user wants to update.
     * @param _newOwner  Address to which a user want to transfer Name ownership.
-    * @param _notify    Execute the callback function of the receiver contract or not.
     * @param _data      Additional transaction metadata.
     */
-    function changeNameOwner(string _name, address _newOwner, bool _notify, bytes _data) only_name_owner(_name)
+    function changeNameOwner(string _name, address _newOwner, bytes _data) only_name_owner(_name)
     {
         NameTransferred(db.ownerOf(_name), _newOwner, sha256(_name), _data);
         db.changeNameOwner(_name, _newOwner);
-        if(_notify && isContract(_newOwner))
+        if(isContract(_newOwner))
         {
             NameReceiver(_newOwner).onNameOwnerChanged(_name, db.ownerOf(_name));
         }
