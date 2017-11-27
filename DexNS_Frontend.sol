@@ -21,7 +21,7 @@ import './safeMath.sol';
  */
  
  contract NameReceiver {
-     function onNameOwnerChanged(string _name, address _sender);
+     function onNameOwnerChanged(string _name, address _sender, bytes _data);
  }
  
  contract DexNS_Abstract_Interface {
@@ -109,7 +109,7 @@ import './safeMath.sol';
     function DexNS_Frontend()
     {
         owner             = msg.sender;
-        db                = DexNS_Storage(0x429611c633806a03447391026a538a022e1e2731);
+        db                = DexNS_Storage(0x3d0e09b25b1f13A443D4ddEDd79F6f4343CC8A25);
         bytes32     _sig  = sha256("DexNS commission");
         expirations[_sig] = 99999999999999999999;
     }
@@ -274,6 +274,9 @@ import './safeMath.sol';
     * of the receiver contract should be executed. If the receiver contract
     * does not implement the `onNameOwnerChanged` function then the fallback
     * function of the receiver contract will be invoked.
+    * 
+    * The execution will be thrown if the name owner is not accessible for
+    * smart-contracts (hideNameOwner = true).
     *
     * @param _name      Name that the user wants to update.
     * @param _newOwner  Address to which a user want to transfer Name ownership.
@@ -281,11 +284,11 @@ import './safeMath.sol';
     */
     function changeNameOwner(string _name, address _newOwner, bytes _data) only_name_owner(_name)
     {
-        NameTransferred(db.ownerOf(_name), _newOwner, sha256(_name), _data);
+        NameTransferred(msg.sender, _newOwner, sha256(_name), _data);
         db.changeNameOwner(_name, _newOwner);
         if(isContract(_newOwner))
         {
-            NameReceiver(_newOwner).onNameOwnerChanged(_name, db.ownerOf(_name));
+            NameReceiver(_newOwner).onNameOwnerChanged(_name, msg.sender, _data);
         }
     }
     
