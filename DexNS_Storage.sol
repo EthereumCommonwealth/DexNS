@@ -358,11 +358,10 @@ contract DexNS_Storage {
     * @dev Destroy the assignation between the Name and its owner's address.
     *
     * @param _name         Name that will no longer be assigned to its owner's address.
-    * @param _destination  Address that will be unassigned.
     */
-    function unassignName(string _name, address _destination) only_frontend
+    function unassignName(string _name) only_frontend
     {
-        assignation[_destination]       = "";
+        assignation[name_assignation[sha256(_name)]]       = "";
         name_assignation[sha256(_name)] = 0x0;
     }
     
