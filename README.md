@@ -355,3 +355,11 @@ Triggered when error occurs.
 `MyContract` / `      something        strange` / `%20%20%11` are valid names for DexNS. It has no checks for inputs. All names that you can imagine are valid.
 
 It can be a good idea to use versions for testing contracts: `MyTest v1.0.0` / `MyTest v9.256.122` etc.
+
+# Deploying DexNS contracts.
+
+1. Compile and deploy the [DexNS storage](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS_Storage.sol) contract.
+
+2. Update the DexNS Frontend contract to init a db on a valid address (or change it after the contract is deployed): https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS_Frontend.sol#L112
+
+3. Call the [change_Frontend_Address](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS_Storage.sol#L399) function of the Storage contract to upload the address of the Frontend contract.
