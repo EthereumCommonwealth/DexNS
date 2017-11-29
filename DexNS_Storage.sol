@@ -168,7 +168,7 @@ contract DexNS_Storage {
     function ownerOf(string _name) constant returns (address _owner) 
     {
         bytes32 sig = bytes32(sha256(_name));
-        if(resolution[sig].hideOwner) 
+        if(resolution[sig].hideOwner && msg.sender != frontend_contract) 
         {
             revert();
         }
