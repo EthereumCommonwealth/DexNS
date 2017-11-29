@@ -343,7 +343,7 @@ import './safeMath.sol';
     {
         if(msg.value >= namePrice)
         {
-           if(db.addressOf("DexNS commission").send(msg.value))
+           if(db.addressOf("DexNS commission").send(namePrice))
            {
                 expirations[sha256(_name)] = now.add(owningTime);
                 if(msg.value.sub( namePrice ) > 0)
