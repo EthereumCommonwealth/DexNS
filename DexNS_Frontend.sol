@@ -157,7 +157,7 @@ import './safeMath.sol';
                 {
                     if(msg.value.sub(namePrice) > 0)
                     {
-                        msg.sender.transfer(msg.value - namePrice);
+                        msg.sender.transfer(msg.value.sub(namePrice));
                     }
                     NameRegistered(_name, _owner);
                     return true;
@@ -187,7 +187,7 @@ import './safeMath.sol';
                 {
                     if(msg.value.sub(namePrice ) > 0)
                     {
-                        msg.sender.transfer(msg.value - namePrice);
+                        msg.sender.transfer(msg.value.sub(namePrice));
                     }
                     NameRegistered(_name, msg.sender);
                     return true;
@@ -348,7 +348,7 @@ import './safeMath.sol';
                 expirations[sha256(_name)] = now.add(owningTime);
                 if(msg.value.sub( namePrice ) > 0)
                 {
-                    msg.sender.transfer(msg.value - namePrice);
+                    msg.sender.transfer(msg.value.sub(namePrice));
                 }
            }
         }
