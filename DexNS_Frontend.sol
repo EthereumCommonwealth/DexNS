@@ -61,8 +61,9 @@ import './safeMath.sol';
  * @dev The frontend contract is executed when a user wants to register new Name or adjust any parameter
  *      of the already existing Name.
  */
- contract DexNS_Frontend is safeMath
+ contract DexNS_Frontend
  {
+    using SafeMath for uint256;
     event Error(bytes32);
     event NamePriceChanged(uint indexed _price);
     event OwningTimeChanged(uint indexed _period);
@@ -109,7 +110,7 @@ import './safeMath.sol';
     function DexNS_Frontend()
     {
         owner             = msg.sender;
-        db                = DexNS_Storage(0x3d0e09b25b1f13A443D4ddEDd79F6f4343CC8A25);
+        db                = DexNS_Storage(0x50e1acbb41877652782b18a275774fa7efdb0b91);
         bytes32     _sig  = sha256("DexNS commission");
         expirations[_sig] = 99999999999999999999;
     }
@@ -151,10 +152,10 @@ import './safeMath.sol';
                 {
                     db.assignName(_name, _destination);
                 }
-                expirations[_sig] = safeAdd(now, owningTime);
+                expirations[_sig] = now.add(owningTime);
                 if (db.addressOf("DexNS commission").send(namePrice))
                 {
-                    if(safeSub(msg.value, namePrice ) > 0)
+                    if(msg.value.sub(namePrice) > 0)
                     {
                         msg.sender.transfer(msg.value - namePrice);
                     }
@@ -181,10 +182,10 @@ import './safeMath.sol';
             if(expirations[_sig] < now)
             {
                 db.registerName(msg.sender, _name);
-                expirations[_sig] = safeAdd(now, owningTime);
+                expirations[_sig] = now.add(owningTime);
                 if (db.addressOf("DexNS commission").send(namePrice))
                 {
-                    if(safeSub(msg.value, namePrice ) > 0)
+                    if(msg.value.sub(namePrice ) > 0)
                     {
                         msg.sender.transfer(msg.value - namePrice);
                     }
@@ -344,8 +345,8 @@ import './safeMath.sol';
         {
            if(db.addressOf("DexNS commission").send(msg.value))
            {
-                expirations[sha256(_name)] = safeAdd(now, owningTime);
-                if(safeSub(msg.value, namePrice ) > 0)
+                expirations[sha256(_name)] = now.add(owningTime);
+                if(msg.value.sub( namePrice ) > 0)
                 {
                     msg.sender.transfer(msg.value - namePrice);
                 }
