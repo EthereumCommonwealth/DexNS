@@ -101,6 +101,7 @@ import './safeMath.sol';
     bool public debug      = true;
     uint public owningTime = 31536000; //1 year in seconds
     uint public namePrice  = 0;
+    string public DexNSCommission = "DexNS commission";
     
     mapping (bytes32 => uint256) public expirations;
     
@@ -111,7 +112,7 @@ import './safeMath.sol';
     {
         owner             = msg.sender;
         db                = DexNS_Storage(0x50e1acbb41877652782b18a275774fa7efdb0b91);
-        bytes32     _sig  = sha256("DexNS commission");
+        bytes32     _sig  = sha256(DexNSCommission);
         expirations[_sig] = 99999999999999999999;
     }
     
@@ -153,7 +154,7 @@ import './safeMath.sol';
                     db.assignName(_name, _destination);
                 }
                 expirations[_sig] = now.add(owningTime);
-                if (db.addressOf("DexNS commission").send(namePrice))
+                if (db.addressOf(DexNSCommission).send(namePrice))
                 {
                     if(msg.value.sub(namePrice) > 0)
                     {
@@ -183,7 +184,7 @@ import './safeMath.sol';
             {
                 db.registerName(msg.sender, _name);
                 expirations[_sig] = now.add(owningTime);
-                if (db.addressOf("DexNS commission").send(namePrice))
+                if (db.addressOf(DexNSCommission).send(namePrice))
                 {
                     if(msg.value.sub(namePrice ) > 0)
                     {
@@ -343,7 +344,7 @@ import './safeMath.sol';
     {
         if(msg.value >= namePrice)
         {
-           if(db.addressOf("DexNS commission").send(namePrice))
+           if(db.addressOf(DexNSCommission).send(namePrice))
            {
                 expirations[sha256(_name)] = now.add(owningTime);
                 if(msg.value.sub( namePrice ) > 0)
