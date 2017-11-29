@@ -121,15 +121,14 @@ contract DexNS_Storage {
     */
     function getName(string _name) constant returns (address _owner, address _associatedAddress, string _value, bytes32 _signature)
     {
-        bytes32 sig = bytes32(sha256(_name));
-        if(resolution[sig].hideOwner) 
-        {
-            return (0x0, resolution[sig].addr, resolution[sig].metadata, resolution[sig].signature);
+        bytes32 sig   = bytes32(sha256(_name));
+        address temp_owner = resolution[sig].owner;
+
+        if(resolution[sig].hideOwner && msg.sender != frontend_contract) {
+            temp_owner = address(0);
         }
-        else 
-        {
-            return (resolution[sig].owner, resolution[sig].addr, resolution[sig].metadata, resolution[sig].signature);
-        }
+
+        return (temp_owner, resolution[sig].addr, resolution[sig].metadata, resolution[sig].signature);
     }
     
     /** 
