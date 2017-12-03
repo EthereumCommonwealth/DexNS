@@ -99,7 +99,7 @@ import './safeMath.sol';
     
     address public owner;
     bool public debug      = true;
-    uint public owningTime = 31536000; //1 year in seconds
+    uint public owningTime = 1 year;
     uint public namePrice  = 0;
     string public DexNSCommission = "DexNS commission";
     
