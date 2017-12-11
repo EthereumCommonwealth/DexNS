@@ -6,7 +6,7 @@ contract DexNS_Storage {
     
     modifier only_owner
     {
-        if ( msg.sender != resolution[bytes32(sha256(DexNS_owner))].owner )
+        if ( msg.sender != resolution[sha256(DexNS_owner)].owner )
         {
             revert();
         }
