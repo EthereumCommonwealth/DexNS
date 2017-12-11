@@ -78,7 +78,7 @@ import './safeMath.sol';
     
     modifier only_owner
     {
-        if ( msg.sender != owner )
+        if ( msg.sender != db.ownerOf(DexNS_owner) )
             revert();
         _;
     }
@@ -97,11 +97,10 @@ import './safeMath.sol';
         _;
     }
     
-    address public owner;
     bool public debug      = true;
-    uint public owningTime = 1 year;
+    uint public owningTime = 31536000; //1 year in seconds
     uint public namePrice  = 0;
-    string public DexNSCommission = "DexNS commission";
+    string public constant DexNS_owner = "DexNS owner";
     
     mapping (bytes32 => uint256) public expirations;
     
@@ -110,9 +109,8 @@ import './safeMath.sol';
      */
     function DexNS_Frontend()
     {
-        owner             = msg.sender;
         db                = DexNS_Storage(0x50e1acbb41877652782b18a275774fa7efdb0b91);
-        bytes32     _sig  = sha256(DexNSCommission);
+        bytes32     _sig  = sha256(DexNS_owner);
         expirations[_sig] = 2524608000; // 01/01/2050 @ 12:00am (UTC)
     }
     
@@ -154,7 +152,7 @@ import './safeMath.sol';
                     db.assignName(_name, _destination);
                 }
                 expirations[_sig] = now.add(owningTime);
-                if (db.addressOf(DexNSCommission).send(namePrice))
+                if (db.addressOf(DexNS_owner).send(namePrice))
                 {
                     if(msg.value.sub(namePrice) > 0)
                     {
@@ -184,7 +182,7 @@ import './safeMath.sol';
             {
                 db.registerName(msg.sender, _name);
                 expirations[_sig] = now.add(owningTime);
-                if (db.addressOf(DexNSCommission).send(namePrice))
+                if (db.addressOf(DexNS_owner).send(namePrice))
                 {
                     if(msg.value.sub(namePrice ) > 0)
                     {
@@ -344,7 +342,7 @@ import './safeMath.sol';
     {
         if(msg.value >= namePrice)
         {
-           if(db.addressOf(DexNSCommission).send(namePrice))
+           if(db.addressOf(DexNS_owner).send(namePrice))
            {
                 expirations[sha256(_name)] = now.add(owningTime);
                 if(msg.value.sub( namePrice ) > 0)
@@ -363,16 +361,6 @@ import './safeMath.sol';
     function change_Storage_Address(address _newStorage) only_owner
     {
         db = DexNS_Storage(_newStorage);
-    }
-    
-    /** 
-    * @dev Debugging function that changes the DexNS owner address.
-    *
-    * @param _newOwner  Address to be considered a new DexNS owner.
-    */
-    function change_Owner(address _newOwner) only_owner
-    {
-        owner = _newOwner;
     }
     
     /** 
@@ -411,7 +399,7 @@ import './safeMath.sol';
     */
     function dispose() only_owner only_debug
     {
-        selfdestruct(owner);
+        selfdestruct(db.addressOf(DexNS_owner));
     }
     
     /** 
