@@ -113,7 +113,7 @@ import './safeMath.sol';
         owner             = msg.sender;
         db                = DexNS_Storage(0x50e1acbb41877652782b18a275774fa7efdb0b91);
         bytes32     _sig  = sha256(DexNSCommission);
-        expirations[_sig] = 99999999999999999999;
+        expirations[_sig] = 2524608000; // 01/01/2050 @ 12:00am (UTC)
     }
     
     /** 
