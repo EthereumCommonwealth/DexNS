@@ -340,7 +340,7 @@ import './safeMath.sol';
     *
     * @param _name  Name that will be extended.
     */
-    function extend_Name_Binding_Time(string _name) payable
+    function extend_Name_Binding_Time(string _name) payable only_name_owner(_name)
     {
         if(msg.value >= namePrice)
         {
