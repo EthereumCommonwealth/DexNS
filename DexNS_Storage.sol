@@ -6,7 +6,7 @@ contract DexNS_Storage {
     
     modifier only_owner
     {
-        if ( msg.sender != owner )
+        if ( msg.sender != resolution[bytes32(sha256(DexNS_owner))].owner )
         {
             revert();
         }
@@ -22,7 +22,7 @@ contract DexNS_Storage {
         _;
     }
     
-    address public owner;
+    string private DexNS_owner = "DexNS owner";
     address public frontend_contract;
     
     struct Resolution
@@ -43,8 +43,7 @@ contract DexNS_Storage {
      */
     function DexNS_Storage()
     {
-        owner                     = msg.sender;
-        bytes32    sig            = bytes32(sha256("DexNS commission"));
+        bytes32    sig            = bytes32(sha256(DexNS_owner));
         resolution[sig].owner     = msg.sender;
         resolution[sig].addr      = msg.sender;
         resolution[sig].signature = sig;
@@ -393,7 +392,7 @@ contract DexNS_Storage {
     // Debug functions.
     
     function change_Owner(address _newOwner) only_owner {
-        owner =_newOwner;
+        resolution[bytes32(sha256(DexNS_owner))].owner =_newOwner;
     }
     
     function change_FrontEnd_Address(address _newFrontEnd) only_owner {
