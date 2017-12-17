@@ -14,12 +14,12 @@ DexNS 3.0 contracts are currently deployed on ETC mainnet.
 #### DexNS_Frontend.sol
 
 This contract serves to register and manage Names.
-DexNS frontend contract: [0x5e9b151eb9742c20679e1d96e5c3633678cab724](https://gastracker.io/addr/0x5e9b151eb9742c20679e1d96e5c3633678cab724)
+DexNS frontend contract: [0x101f1920e4cD9c7e2aF056E2cB1954d0DD9647b9](https://gastracker.io/addr/0x101f1920e4cD9c7e2aF056E2cB1954d0DD9647b9)
 
 #### DexNS_Storage.sol
 
 This contract serves to access content of the already-registered Names.
-DexNS storage contract: [0x429611c633806a03447391026a538a022e1e2731](https://gastracker.io/addr/0x429611c633806a03447391026a538a022e1e2731)
+DexNS storage contract: [0x28fc417c046d409c14456cec0fc6f9cde46cc9f3](https://gastracker.io/addr/0x28fc417c046d409c14456cec0fc6f9cde46cc9f3)
 
 # How do I register a name?
 
