@@ -25,13 +25,13 @@ DexNS storage contract: [0x28fc417c046d409c14456cec0fc6f9cde46cc9f3](https://gas
 
 1. Navigate to ClassicEtherWallet [contracts tab](https://ethereumproject.github.io/etherwallet/?network=ETC#contracts).
 
-2. Choose DexNS Frontend Contract from default contracts list and click the "ACCESS" button. (make sure that contract address is `0x5e9b151eb9742c20679e1d96e5c3633678cab724`)
+2. Choose DexNS Frontend Contract from default contracts list and click the "ACCESS" button. (make sure that contract address is `0x101f1920e4cD9c7e2aF056E2cB1954d0DD9647b9`)
 
 3. (OPTIONAL: check name availability) Choose `endtimeOf` function name to check whether the name is available or not. 
 
-3.1 (OPTIONAL: check name availability) Type the desired name into `_name string` input box. You should just type Name in text format. For example `dexaran820@gmail.com`.
+3.1 (OPTIONAL: check name availability) Type the desired name into `_name string` input box. You should just type Name in text format. For example `dexaran@ethereumclassic.org`.
 
-3.2 (OPTIONAL: check name availability) Click "READ" button and check if the ` _expires uint256` field is equal to 0 or not. As you can see for `dexaran820@gmail.com` it is not equal to zero which means that this name is already owned. You can not register a name that is already owned. You should pick an another name in this case.
+3.2 (OPTIONAL: check name availability) Click "READ" button and check if the ` _expires uint256` field is equal to 0 or not. As you can see for `dexaran@ethereumclassic.org` it is not equal to zero which means that this name is already owned. You can not register a name that is already owned. You should pick an another name in this case.
 
 4. Choose `registerName` function from the functions dropdown menu.
 
