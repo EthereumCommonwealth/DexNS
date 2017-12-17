@@ -109,7 +109,7 @@ import './safeMath.sol';
      */
     function DexNS_Frontend()
     {
-        db                = DexNS_Storage(0x50e1acbb41877652782b18a275774fa7efdb0b91);
+        db                = DexNS_Storage(0x28fc417c046d409c14456cec0fc6f9cde46cc9f3);
         bytes32     _sig  = sha256(DexNS_owner);
         expirations[_sig] = 2524608000; // 01/01/2050 @ 12:00am (UTC)
     }
