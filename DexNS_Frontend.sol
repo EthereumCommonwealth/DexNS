@@ -36,7 +36,7 @@ import './safeMath.sol';
      function updateName(string, address);
      function updateName(string, address, string);
      function registerName(string) payable returns (bool);
-     function registerAndUpdateName(string, address, address, string, bool) payable returns (bool);
+     function registerAndUpdateName(string, address, address, string, bool, bool) payable returns (bool);
      function changeNameOwner(string, address, bytes);
      function hideNameOwner(string);
      function extendNameBindingTime(string) payable;
