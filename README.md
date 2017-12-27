@@ -5,6 +5,7 @@
 DexNS allows to register human-readable names that could be resolved into Ethereum hex-addresses. Currently, names are free. You can own your name within 1 year after the moment of registration. You can extend name ownership after the certain amount of time will pass. DexNS provides names in human-readable text format. DexNS contract allows any names of any lengths and any characters, but third party services such as ClassicEtherWallet may filter confusing characters and weird names. As the result, it is not recommended to register names with whitespaces and names ending in ENS tld resolutions ( .eth / .etc / .reverse ). You can register your e-mail address as Name for example ( `dexaran@ethereumclassic.org` ). Any user will be able to send ETH, ETC, EXP, UBQ, MUSICOIN and testnet Ether to your address that is assigned to the registered name via ClassicEtherWallet. 
 
 (1) Yes, you can use one DexNS Name on multiple chains to receive different currencies such are ETH, ETC, EXP, UBQ.
+
 (2) Yes, you can store multiple currencies in one Ethereum wallet address.
 
 ## Contracts
