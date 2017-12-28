@@ -44,16 +44,16 @@ DexNS storage contract: [0x28fc417c046d409c14456cec0fc6f9cde46cc9f3](https://gas
 
 ## Interaction with DexNS
 
-To register or manage names you should call the [DexNS frontend contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS_Frontend.sol) contract (0x5e9b151eb9742c20679e1d96e5c3633678cab724).
+To register or manage names you should call the [DexNS frontend contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS_Frontend.sol) contract (0x101f1920e4cD9c7e2aF056E2cB1954d0DD9647b9).
 
-To interact with the contents of already registered names, you should call [DexNS state storage contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS_Storage.sol) (0x429611c633806a03447391026a538a022e1e2731).
+To interact with the contents of already registered names, you should call [DexNS state storage contract](https://github.com/EthereumCommonwealth/DexNS/blob/master/DexNS_Storage.sol) (0x28fc417c046d409c14456cec0fc6f9cde46cc9f3).
 
 DexNS can also be used as a control unit for dynamically linking contracts in a contract system. You should interact with state storage contract to access names.
 Example:
 
 ```js
  // This will send 100 WEI to the "My Friend" address.
-    DexNS_Storage dexns = DexNS_Storage(0x429611c633806a03447391026a538a022e1e2731);
+    DexNS_Storage dexns = DexNS_Storage(0x28fc417c046d409c14456cec0fc6f9cde46cc9f3);
     dexns.addressOf("My Friend").transfer(100);
 ```
 
@@ -89,6 +89,10 @@ Use the following chain identifier flags:
 `-RIN` for Rinkeby.
 
 `-KOV` for Kovan.
+
+`-CLO` for Callisto mainnet.
+
+`-CLT` for Callisto testnet.
 
 Use the following key flags before data chunks:
 
